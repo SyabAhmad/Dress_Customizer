@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Header from "../components/Header.jsx";
 import { DressSVG } from "../utils/dressGenerator.jsx";
+import girlPicture from "../assets/girlpicture.png";
 
 export default function Landing() {
   const samples = [
@@ -46,44 +47,56 @@ export default function Landing() {
   ];
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-rose-50 to-white dark:from-zinc-950 dark:to-zinc-900 text-zinc-900 dark:text-zinc-100">
+    <div className="min-h-screen bg-[#222831] text-[#EEEEEE]">
       <Header />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Hero */}
         <section className="pt-14 pb-16 lg:pt-20 lg:pb-24 relative">
           <BackgroundSparkle />
-          <div className="grid lg:grid-cols-12 gap-8 items-center">
+          <div className="grid lg:grid-cols-10 gap-10 items-center">
             <div className="lg:col-span-7">
-              <h1 className="text-4xl/tight sm:text-5xl/tight font-semibold tracking-tight font-['Playfair_Display']">
-                Design couture dresses with natural language
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#C5A25A] bg-[#31363F]/70 backdrop-blur px-3 py-1 text-xs font-medium text-[#EEEEEE] shadow-sm">
+                New • AI Dress Customizer
+              </div>
+              <h1 className="mt-3 text-4xl/tight sm:text-5xl/tight font-semibold tracking-tight font-['Playfair_Display']">
+                Turn ideas into elegant fashion mock‑ups in seconds
               </h1>
-              <p className="mt-4 text-zinc-600 dark:text-zinc-400 text-lg">
-                Describe your vision—color, pattern, sleeves, neckline,
-                fabric—and see it instantly as a refined vector mock‑up. Tweak
-                parameters, save variants, and export in seconds.
+              <p className="mt-4 text-[#BDBDBD] text-lg">
+                Describe the color, pattern, sleeves, neckline and fabric. Get a
+                refined, editable vector preview you can tweak and export.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   to="/studio"
-                  className="inline-flex items-center gap-2 rounded-lg bg-rose-600 text-white px-5 py-3 font-medium shadow hover:bg-rose-700"
+                  className="inline-flex items-center gap-2 rounded-lg bg-[#76ABAE] text-[#222831] px-5 py-3 font-medium shadow hover:bg-[#5E9396]"
                 >
                   Launch Studio <ArrowRight className="w-4 h-4" />
                 </Link>
                 <a
                   href="#features"
-                  className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-800 px-5 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                  className="inline-flex items-center gap-2 rounded-lg border border-[#C5A25A] px-5 py-3 hover:bg-[#C5A25A]/20"
                 >
                   Explore features
                 </a>
               </div>
-              <div className="mt-6 text-sm text-zinc-500">
-                No signup • 100% client‑side • Export SVG/PNG
+              <div className="mt-6 flex flex-wrap items-center gap-5 text-sm text-[#BDBDBD]">
+                <span className="inline-flex items-center gap-1">
+                  <Star className="w-4 h-4 text-[#C5A25A]" /> Loved by designers
+                </span>
+                <span>Private • 100% browser • Export SVG/PNG</span>
               </div>
             </div>
-            <div className="lg:col-span-5">
-              <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 bg-white dark:bg-zinc-900 shadow-sm">
-                <div className="aspect-5/7 w-full grid place-items-center bg-zinc-50 dark:bg-zinc-950 rounded-lg overflow-hidden text-rose-600 dark:text-rose-400">
-                  <DressSVG params={samples[0].params} />
+            <div className="lg:col-span-3">
+              <div className="rounded-2xl p-px bg-linear-to-br from-[#C5A25A] to-[#76ABAE33] shadow-sm">
+                <div className="rounded-2xl border border-[#C5A25A] p-4 bg-[#31363F]/80 backdrop-blur">
+                  <div className="aspect-5/7 w-full bg-[#31363F] rounded-lg overflow-hidden">
+                    <img
+                      src={girlPicture}
+                      alt="Elegant dress inspiration"
+                      className=" w-full object-cover"
+                      loading="eager"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -95,42 +108,45 @@ export default function Landing() {
           <h2 className="text-2xl font-semibold font-['Playfair_Display']">
             Crafted for fashion creatives
           </h2>
+          <p className="mt-2 text-[#BDBDBD]">
+            Everything you need to ideate, iterate and share.
+          </p>
           <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             <FeatureCard
               title="Prompt to design"
               desc="Describe a dress in plain English and get a clean, editable mock‑up."
             >
-              <Wand className="w-5 h-5" />
+              <Wand className="w-5 h-5 text-[#76ABAE]" />
             </FeatureCard>
             <FeatureCard
               title="Rich customization"
               desc="Adjust color, pattern, sleeves, neckline, train, texture, and volume."
             >
-              <Sliders className="w-5 h-5" />
+              <Sliders className="w-5 h-5 text-[#76ABAE]" />
             </FeatureCard>
             <FeatureCard
               title="Save & compare"
               desc="Capture variants with thumbnails; switch styles in one click."
             >
-              <Layers className="w-5 h-5" />
+              <Layers className="w-5 h-5 text-[#76ABAE]" />
             </FeatureCard>
             <FeatureCard
               title="Vector export"
               desc="Export crisp SVG or ready‑to‑share PNG with one tap."
             >
-              <Export className="w-5 h-5" />
+              <Export className="w-5 h-5 text-[#76ABAE]" />
             </FeatureCard>
             <FeatureCard
               title="Fast & private"
               desc="Everything runs locally in your browser—no uploads required."
             >
-              <Bolt className="w-5 h-5" />
+              <Bolt className="w-5 h-5 text-[#76ABAE]" />
             </FeatureCard>
             <FeatureCard
-              title="Dark mode"
-              desc="Comfortable UI for long sessions, day or night."
+              title="Polished visuals"
+              desc="Tasteful palettes and gentle shading for high‑end presentation."
             >
-              <Moon className="w-5 h-5" />
+              <Moon className="w-5 h-5 text-[#76ABAE]" />
             </FeatureCard>
           </div>
         </section>
@@ -164,13 +180,13 @@ export default function Landing() {
             {samples.map((s) => (
               <div
                 key={s.name}
-                className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-3 bg-white dark:bg-zinc-900 shadow-sm"
+                className="group rounded-2xl p-px bg-linear-to-br from-[#C5A25A] to-[#76ABAE33] shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="aspect-5/7 grid place-items-center bg-zinc-50 dark:bg-zinc-950 rounded-lg overflow-hidden text-rose-600 dark:text-rose-400">
-                  <DressSVG params={s.params} />
-                </div>
-                <div className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                  {s.name}
+                <div className="rounded-2xl border border-[#31363F] p-3 bg-[#31363F]/70">
+                  <div className="aspect-5/7 grid place-items-center bg-[#31363F] rounded-lg overflow-hidden text-[#76ABAE]">
+                    <DressSVG params={s.params} />
+                  </div>
+                  <div className="mt-2 text-sm text-[#BDBDBD]">{s.name}</div>
                 </div>
               </div>
             ))}
@@ -178,7 +194,7 @@ export default function Landing() {
           <div className="mt-8">
             <Link
               to="/studio"
-              className="inline-flex items-center gap-2 rounded-lg bg-rose-600 text-white px-5 py-3 font-medium shadow hover:bg-rose-700"
+              className="inline-flex items-center gap-2 rounded-lg bg-[#76ABAE] text-[#222831] px-5 py-3 font-medium shadow hover:bg-[#5E9396]"
             >
               Start designing now <ArrowRight className="w-4 h-4" />
             </Link>
@@ -186,21 +202,18 @@ export default function Landing() {
         </section>
 
         {/* Footer */}
-        <footer className="py-10 text-sm text-zinc-500 border-t border-zinc-200 dark:border-zinc-800">
+        <footer className="py-10 text-sm text-[#BDBDBD] border-t border-[#31363F]">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div>© {new Date().getFullYear()} Dress Customizer</div>
             <div className="flex items-center gap-4">
               <a
                 href="https://github.com/Mahboobiqbal/Dress_Customizer"
                 target="_blank"
-                className="hover:text-zinc-700 dark:hover:text-zinc-300"
+                className="hover:text-[#EEEEEE]"
               >
                 GitHub
               </a>
-              <Link
-                to="/studio"
-                className="hover:text-zinc-700 dark:hover:text-zinc-300"
-              >
+              <Link to="/studio" className="hover:text-[#EEEEEE]">
                 Studio
               </Link>
             </div>
@@ -213,24 +226,27 @@ export default function Landing() {
 
 function FeatureCard({ title, desc, children }) {
   return (
-    <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 bg-white dark:bg-zinc-900 shadow-sm">
-      <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
+    <div className="rounded-xl border border-[#31363F] p-4 bg-[#31363F]/70 backdrop-blur shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex items-center gap-2 text-[#EEEEEE]">
         {children}
         <span className="font-medium">{title}</span>
       </div>
-      <p className="mt-2 text-zinc-600 dark:text-zinc-400 text-sm">{desc}</p>
+      <p className="mt-2 text-[#BDBDBD] text-sm">{desc}</p>
     </div>
   );
 }
 
 function Step({ n, title, children }) {
   return (
-    <li className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 bg-white dark:bg-zinc-900 shadow-sm">
-      <div className="text-xs text-zinc-500">Step {n}</div>
+    <li className="rounded-xl border border-[#31363F] p-4 bg-[#31363F]/70 backdrop-blur shadow-sm">
+      <div className="text-xs text-[#BDBDBD] flex items-center gap-2">
+        <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#C5A25A]/30 text-[#EEEEEE] font-medium">
+          {n}
+        </span>
+        Step {n}
+      </div>
       <div className="mt-1 font-medium">{title}</div>
-      <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-        {children}
-      </p>
+      <p className="mt-1 text-sm text-[#BDBDBD]">{children}</p>
     </li>
   );
 }
@@ -304,8 +320,16 @@ function BackgroundSparkle() {
       aria-hidden
       className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
     >
-      <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-linear-to-br from-rose-400/25 to-pink-500/20 blur-3xl" />
-      <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-linear-to-tr from-rose-300/25 to-fuchsia-400/20 blur-3xl" />
+      <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-linear-to-br from-[#76ABAE]/40 to-[#C5A25A]/20 blur-3xl" />
+      <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-linear-to-tr from-[#C5A25A]/40 to-[#76ABAE]/20 blur-3xl" />
     </div>
+  );
+}
+
+function Star(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
+      <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27Z" />
+    </svg>
   );
 }

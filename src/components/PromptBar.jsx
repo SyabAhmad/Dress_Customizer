@@ -13,19 +13,19 @@ export default function PromptBar({
 
   return (
     <section className="mt-6">
-      <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-3 bg-white dark:bg-zinc-900 shadow-sm">
+      <div className="rounded-xl border border-rose-200 p-4 bg-white/70 backdrop-blur shadow-sm">
         <div className="flex flex-col md:flex-row gap-3">
           <textarea
             value={prompt}
             onChange={(e) => onChange(e.target.value)}
             rows={2}
             placeholder="Describe your dress… e.g. ‘Generate a blue evening gown with lace sleeves and a long train.’"
-            className="flex-1 resize-none rounded-lg border border-zinc-200 dark:border-zinc-800 bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+            className="flex-1 resize-none rounded-lg border border-rose-200 bg-white/60 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-rose-400/40"
           />
           <button
             onClick={onGenerate}
             disabled={isGenerating || !prompt.trim()}
-            className="md:self-start inline-flex items-center justify-center whitespace-nowrap rounded-lg bg-blue-600 text-white px-4 py-2.5 text-sm font-medium shadow hover:bg-blue-700 disabled:opacity-50"
+            className="w-full md:w-auto md:self-start inline-flex items-center justify-center whitespace-nowrap rounded-lg bg-rose-600 text-white px-4 py-2.5 text-sm font-medium shadow hover:bg-rose-700 disabled:opacity-50"
           >
             {isGenerating ? (
               <span className="inline-flex items-center gap-2">
@@ -43,7 +43,7 @@ export default function PromptBar({
             <button
               key={s}
               onClick={() => onChange(s)}
-              className="text-xs px-2.5 py-1 rounded-md border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+              className="text-xs px-2.5 py-1 rounded-md border border-rose-200 hover:bg-rose-100/60"
             >
               {s}
             </button>
