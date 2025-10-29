@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dress Customizer — AI UI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <script>
+    // Set initial theme ASAP to avoid flash
+    (function () {
+      try {
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const dark = stored ? stored === 'dark' : prefersDark;
+        const root = document.documentElement;
+        const apply = (isDark) => {
+          root.classList.toggle('dark', isDark);
+          root.classList.toggle('light', !isDark);
+          if (document.body) {
+            document.body.classList.toggle('dark', isDark);
+            document.body.classList.toggle('light', !isDark);
+          } else {
+            document.addEventListener('DOMContentLoaded', () => {
+              document.body.classList.toggle('dark', isDark);
+              document.body.classList.toggle('light', !isDark);
+            }, { once: true });
+          }
+          root.style.colorScheme = isDark ? 'dark' : 'light';
+        };
+        apply(dark);
+      } catch (e) { /* noop */ }
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="root"
+    style="font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji">
+  </div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>
