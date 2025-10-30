@@ -46,3 +46,18 @@ npm run preview
 - The SVG silhouette is intentionally stylized to serve as a quick mock-up.
 - Tailwind v4 utilities are used via `@tailwindcss/vite` and `@import "tailwindcss"` in `src/index.css`.
 
+## Theming
+
+A single shared theme file is available at `src/styles/theme.css`.
+
+- Edit the CSS variables at the top of `src/styles/theme.css` to change
+  application-wide colors and tokens (primary color, background, text, etc.).
+- You can use the CSS variables directly in components, for example:
+
+  - Inline style in JSX: `style={{ color: 'var(--color-primary)' }}`
+  - In CSS: `.my-class { background: var(--color-surface); color: var(--color-text); }`
+
+- A few helper classes are provided (e.g., `bg-primary`, `text-primary`, `btn-primary`).
+
+Because `src/index.css` imports `src/styles/theme.css`, the variables are available
+throughout the app after the initial import in `src/main.jsx`.

@@ -1,0 +1,471 @@
+/* Global theme variables and a few helper classes.
+   Edit the variables below to change app-wide colors. Components can
+   use the variables directly (e.g. style={{ color: 'var(--color-primary)' }})
+   or use the helper classes like `bg-primary` / `text-primary`.
+
+   Keep this file minimal — it only defines CSS variables and small
+   convenience utilities so changing one place updates the theme.
+*/
+
+:root {
+  /* Light, bright pastel palette inspired by the provided mock */
+  --color-primary: #7c5cff; /* bright purple CTA */
+  --color-primary-600: #6f4ff6;
+
+  /* Soft secondary accents */
+  --color-secondary: #06b6d4; /* keep cyan for accents if needed */
+  --color-accent: #ff9ab8; /* soft pink accent */
+
+  /* Pastel neon accents tuned down for a lighter look */
+  --color-neon-blue: #7ee7ff; /* pastel cyan */
+  --color-neon-pink: #ff9ab8; /* pastel pink */
+  --color-neon-purple: #cbb7ff; /* lavender */
+  --color-neon-green: #b9ffca; /* pastel green */
+  --color-neon-orange: #ffd6a6; /* soft orange */
+  --color-neon-cyan: #7ee7ff;
+
+  /* Light, airy background gradient */
+  --bg-neon-gradient: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #fbf7ff 35%,
+    #f6f0ff 70%,
+    #f3f5ff 100%
+  );
+
+  /* Soft pastel overlays to create gentle vignette & glow */
+  --bg-neon-overlay: radial-gradient(
+      circle at 12% 20%,
+      rgba(199, 176, 255, 0.12) 0%,
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 82% 12%,
+      rgba(255, 165, 160, 0.08) 0%,
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 60% 70%,
+      rgba(255, 230, 200, 0.05) 0%,
+      transparent 35%
+    );
+
+  /* Gentle moving sheen layer */
+  --bg-neon-move: linear-gradient(
+    90deg,
+    rgba(124, 92, 255, 0.03),
+    rgba(255, 154, 184, 0.03),
+    rgba(255, 214, 166, 0.02)
+  );
+
+  /* Surface / background / text tuned for light theme */
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-text: #0f172a; /* keep readable dark text */
+  --color-muted: #6b7280; /* medium-muted */
+
+  /* Borders & shadows using softer pastel shadows */
+  --color-border: rgba(15, 23, 42, 0.06);
+  --shadow-sm: 0 6px 18px rgba(15, 23, 42, 0.06);
+
+  /* Radius & spacing tokens */
+  :root {
+    /* Dark purple / indigo hero palette inspired by the provided mock */
+    --color-primary: #7c5cff; /* purple CTA base */
+    --color-primary-600: #6f4ff6;
+
+    /* Accent cyan for hero headings and highlights */
+    --color-accent: #3be8d0; /* aqua / cyan */
+
+    /* Neon-like accent colors tuned for dark background */
+    --color-neon-blue: #37e6ff; /* bright cyan for hero title */
+    --color-neon-pink: #ff9ab8;
+    --color-neon-purple: #cbb7ff;
+    --color-neon-green: #b9ffca;
+
+    /* Dark hero background gradient */
+    --bg-neon-gradient: linear-gradient(
+      180deg,
+      #0b0f21 0%,
+      #2b0b4f 45%,
+      #3a0f6a 100%
+    );
+
+    /* Subtle colored overlays to create depth */
+    --bg-neon-overlay: radial-gradient(
+        circle at 10% 20%,
+        rgba(59, 232, 208, 0.06) 0%,
+        transparent 30%
+      ),
+      radial-gradient(
+        circle at 85% 10%,
+        rgba(203, 183, 255, 0.04) 0%,
+        transparent 28%
+      );
+
+    --bg-neon-move: linear-gradient(
+      90deg,
+      rgba(124, 92, 255, 0.03),
+      rgba(59, 232, 208, 0.03)
+    );
+
+    /* Surface / text for dark layout */
+    --color-bg: #07070d;
+    --color-surface: #0f1422;
+    --color-text: #e6f7ff; /* light text */
+    --color-muted: #b6bfd0;
+
+    --color-border: rgba(255, 255, 255, 0.06);
+    --shadow-sm: 0 8px 30px rgba(2, 6, 23, 0.6);
+
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+
+    --color-header: #0b0b12; /* header base */
+    --color-header-border: rgba(255, 255, 255, 0.04);
+    --color-header-text: #e6f7ff;
+
+    --color-dark-surface: #141427;
+    --color-accent-1: var(--color-primary);
+    --color-accent-2: #ffd6a6;
+
+    --color-rose-50: #2b0c12;
+    --color-rose-600: #ff6b8a;
+
+    /* dedicated hero title color */
+    --hero-title: var(--color-neon-blue);
+  }
+  .bg-theme {
+    background-color: var(--color-bg);
+  }
+  .surface {
+    background-color: var(--color-surface);
+  }
+  .text-theme {
+    color: var(--color-text);
+  }
+  .text-muted {
+    color: var(--color-muted);
+  }
+  .border-theme {
+    border-color: var(--color-border);
+  }
+  .bg-header {
+    background-color: var(--color-header);
+  }
+  .border-header-border {
+    border-color: var(--color-header-border);
+  }
+  .text-header-text {
+    color: var(--color-header-text);
+  }
+  .bg-dark-surface {
+    background-color: var(--color-dark-surface);
+  }
+  .bg-accent {
+    background-color: var(--color-accent-1);
+  }
+  .text-accent {
+    color: var(--color-accent-1);
+  }
+  .bg-accent-2 {
+    background-color: var(--color-accent-2);
+  }
+  .text-accent-2 {
+    color: var(--color-accent-2);
+  }
+  .bg-rose-50 {
+    background-color: var(--color-rose-50);
+  }
+
+  /* Small helper for the header/logo mark so the gradient is centralized here */
+  .logo-mark {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent-1),
+      var(--color-accent-2)
+    );
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    overflow: visible;
+    /* subtle depth + soft neon tint */
+    box-shadow: 0 3px 10px rgba(2, 6, 23, 0.45),
+      0 0 12px rgba(118, 171, 174, 0.06) inset;
+  }
+
+  .logo-mark::after {
+    /* soft blurred halo to give a gentle neon aura */
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: inherit;
+    filter: blur(10px);
+    background: linear-gradient(
+      90deg,
+      rgba(118, 171, 174, 0.12),
+      rgba(128, 0, 255, 0.08)
+    );
+    opacity: 0.95;
+    pointer-events: none;
+  }
+
+  .btn-cta {
+    background-color: var(--color-accent-1);
+    color: var(--color-header);
+    border-radius: var(--radius-md);
+    padding: 0.6rem 1rem;
+  }
+
+  /* Rose/action helpers (map project 'rose' utilities into variables) */
+  .bg-rose {
+    background-color: var(--color-rose-600);
+    color: white;
+  }
+  .text-rose {
+    color: var(--color-rose-600);
+  }
+  .btn-rose {
+    background-color: var(--color-rose-600);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-md);
+  }
+
+  .bg-primary {
+    background-color: var(--color-primary);
+    color: white;
+  }
+  .text-primary {
+    color: var(--color-primary);
+  }
+  .bg-secondary {
+    background-color: var(--color-secondary);
+    color: white;
+  }
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: var(--radius-md);
+    padding: 0.5rem 0.75rem;
+  }
+
+  /* Example usage in CSS: .card { background: var(--color-surface); color: var(--color-text); } */
+
+  /* Neon glow effects and animations - refined for a cleaner, more polished look */
+  /* Tunable variables for glow spread and intensity */
+  :root {
+    --neon-glow-sm: 6px;
+    --neon-glow-md: 14px;
+    --neon-glow-lg: 28px;
+    --neon-glow-color-alpha: 0.85;
+  }
+
+  /* Core neon glow utility (teal by default) */
+  .neon-glow {
+    /* much softer glow for light theme */
+    box-shadow: 0 6px 18px rgba(124, 92, 255, 0.08),
+      0 0 20px rgba(59, 232, 208, 0.04) inset;
+  }
+
+  .neon-glow-pink {
+    box-shadow: 0 6px 18px rgba(255, 154, 184, 0.08),
+      0 0 20px rgba(255, 214, 166, 0.03) inset;
+  }
+
+  .neon-glow-purple {
+    box-shadow: 0 6px 18px rgba(203, 183, 255, 0.1),
+      0 0 20px rgba(124, 92, 255, 0.04) inset;
+  }
+
+  /* Enhanced neon text: uses layered text-shadow for crisp core + soft halo */
+  .neon-text {
+    /* reserved for small badges / accents only — reduce glow to color + subtle halo */
+    color: var(--color-neon-cyan);
+    text-shadow: 0 0 2px rgba(124, 92, 255, 0.08),
+      0 0 6px rgba(59, 232, 208, 0.06);
+  }
+
+  .neon-text-pink {
+    color: var(--color-neon-pink);
+    text-shadow: 0 0 2px rgba(255, 154, 184, 0.06),
+      0 0 6px rgba(255, 214, 166, 0.04);
+  }
+
+  .neon-text-purple {
+    color: var(--color-neon-purple);
+    text-shadow: 0 0 2px rgba(203, 183, 255, 0.08),
+      0 0 6px rgba(124, 92, 255, 0.05);
+  }
+
+  .neon-text-green {
+    color: var(--color-neon-green);
+    text-shadow: 0 0 2px rgba(185, 255, 202, 0.06),
+      0 0 6px rgba(185, 255, 202, 0.04);
+  }
+
+  /* Decorative neon backgrounds */
+  .neon-bg {
+    background: var(--bg-neon-gradient);
+    position: relative;
+    overflow: hidden;
+    /* keep the base dark gradient, add a soft moving sheen above it */
+    background-image: var(--bg-neon-gradient), var(--bg-neon-move);
+    background-blend-mode: normal, overlay;
+    background-size: auto, 240% 240%;
+    animation: move-gradient 24s linear infinite;
+  }
+
+  .neon-bg::before {
+    content: "";
+    position: absolute;
+    top: -6%;
+    left: -6%;
+    width: 112%;
+    height: 112%;
+    background: var(--bg-neon-overlay);
+    pointer-events: none;
+    mix-blend-mode: screen;
+    opacity: 0.95;
+  }
+
+  @keyframes move-gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes pulse-neon {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(-6px) scale(1.02);
+      opacity: 0.85;
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-pulse-neon {
+    animation: pulse-neon 3s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 3.5s ease-in-out infinite;
+  }
+
+  /* Hover glow effect (subtle) */
+  .hover-glow:hover {
+    box-shadow: 0 0 var(--neon-glow-md) rgba(0, 229, 255, 0.35),
+      0 0 calc(var(--neon-glow-lg) * 0.8) rgba(0, 229, 255, 0.18);
+    transform: translateY(-2px);
+    transition: all 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .hover-glow-pink:hover {
+    box-shadow: 0 0 var(--neon-glow-md) rgba(255, 0, 204, 0.35),
+      0 0 calc(var(--neon-glow-lg) * 0.8) rgba(255, 0, 204, 0.14);
+    transform: translateY(-2px);
+    transition: all 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  /* Reusable neon badge (for 'New' pill) */
+  .neon-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--color-header-text);
+    position: relative;
+  }
+
+  .neon-badge::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 999px;
+    filter: blur(10px);
+    background: radial-gradient(
+      circle at 20% 30%,
+      rgba(0, 229, 255, 0.12),
+      transparent 30%
+    );
+    opacity: 0.9;
+    pointer-events: none;
+  }
+
+  /* Neon CTA button */
+  .neon-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    color: #021018;
+    background: var(--launch-gradient);
+    box-shadow: 0 10px 30px rgba(124, 92, 255, 0.12),
+      0 0 20px rgba(59, 232, 208, 0.06) inset;
+    border: 0;
+  }
+
+  /* Helper to use the launch gradient as a large background overlay */
+  .bg-launch-gradient {
+    background-image: var(--launch-gradient);
+  }
+
+  /* Hero title helper */
+  .text-hero-title {
+    color: var(--hero-title);
+  }
+
+  /* Soft neon card outline */
+  .neon-card {
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 30px rgba(2, 6, 23, 0.45),
+      0 0 28px rgba(0, 229, 255, 0.04) inset;
+  }
+
+  /* Subtle halo for large headings */
+  .neon-halo {
+    position: relative;
+  }
+
+  .neon-halo::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -20px;
+    width: 60%;
+    height: 18px;
+    background: radial-gradient(
+      circle,
+      rgba(0, 229, 255, 0.12),
+      transparent 60%
+    );
+    filter: blur(14px);
+    pointer-events: none;
+  }
+}
