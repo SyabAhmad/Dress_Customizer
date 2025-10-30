@@ -78,14 +78,14 @@ export default function Studio() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-rose-50 to-white text-zinc-900">
+    <div className="min-h-screen bg-theme text-theme">
       <Header />
       <main className="mx-auto max-w-7xl px-4 pb-8">
         {/* Layout with sidebar on the left */}
         <div className="mt-6 lg:flex lg:gap-6">
           {/* Sidebar (large screens) */}
           <aside className="hidden lg:block w-56 shrink-0">
-            <nav className="rounded-xl border border-rose-200 bg-white/70 backdrop-blur min-h-[520px] p-3 flex flex-col gap-2 shadow-sm">
+            <nav className="rounded-xl border border-theme surface min-h-[520px] p-3 flex flex-col gap-2 shadow-sm">
               <div className="px-2 pb-1 text-xs font-medium uppercase tracking-wider text-zinc-500">
                 Navigation
               </div>

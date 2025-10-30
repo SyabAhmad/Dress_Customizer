@@ -21,15 +21,15 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-rose-50 to-white text-zinc-900">
+    <div className="min-h-screen bg-theme text-theme">
       <Header />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
         <h1 className="text-2xl font-semibold font-['Playfair_Display']">
           Profile
         </h1>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          <section className="rounded-xl border border-rose-200 bg-white/70 backdrop-blur p-5 shadow-sm">
-            <h2 className="text-sm font-medium uppercase tracking-wider text-zinc-500">
+          <section className="rounded-xl border border-theme surface backdrop-blur p-5 shadow-sm">
+            <h2 className="text-sm font-medium uppercase tracking-wider text-muted">
               Account
             </h2>
             <div className="mt-4">
@@ -41,15 +41,15 @@ export default function Profile() {
             <div className="mt-6 flex gap-2">
               <button
                 onClick={signOut}
-                className="px-4 py-2.5 rounded-lg bg-rose-600 text-white shadow hover:bg-rose-700"
+                className="btn-rose shadow hover:opacity-90"
               >
                 Sign out
               </button>
             </div>
           </section>
 
-          <section className="rounded-xl border border-rose-200 bg-white/70 backdrop-blur p-5 shadow-sm">
-            <h2 className="text-sm font-medium uppercase tracking-wider text-zinc-500">
+          <section className="rounded-xl border border-theme surface backdrop-blur p-5 shadow-sm">
+            <h2 className="text-sm font-medium uppercase tracking-wider text-muted">
               Billing
             </h2>
             <p className="mt-3 text-sm text-zinc-600">

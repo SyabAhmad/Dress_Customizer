@@ -34,7 +34,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-rose-50 to-white dark:from-zinc-950 dark:to-zinc-900 text-zinc-900 dark:text-zinc-100">
+    <div className="min-h-screen bg-theme dark:bg-zinc-950 text-theme dark:text-zinc-100">
       <Header />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <section className="py-14 lg:py-20 grid place-items-center">
@@ -47,7 +47,7 @@ export default function SignUp() {
                 Start crafting beautiful designs
               </p>
             </div>
-            <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm p-6">
+            <div className="rounded-xl border border-theme dark:border-zinc-800 surface dark:bg-zinc-900 shadow-sm p-6">
               {error && (
                 <div className="mb-3 text-sm text-rose-600 dark:text-rose-400">
                   {error}
@@ -101,7 +101,7 @@ export default function SignUp() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-rose-600 text-white px-4 py-2.5 font-medium shadow hover:bg-rose-700 disabled:opacity-70"
+                  className="w-full inline-flex items-center justify-center gap-2 btn-rose font-medium shadow disabled:opacity-70"
                 >
                   {loading ? "Creating account…" : "Sign up"}
                 </button>

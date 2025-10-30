@@ -24,15 +24,15 @@ export default function Settings() {
   }, [density, notifications]);
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-rose-50 to-white text-zinc-900">
+    <div className="min-h-screen bg-theme text-theme">
       <Header />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
         <h1 className="text-2xl font-semibold font-['Playfair_Display']">
           Settings
         </h1>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          <section className="rounded-xl border border-rose-200 bg-white/70 backdrop-blur p-5 shadow-sm">
-            <h2 className="text-sm font-medium uppercase tracking-wider text-zinc-500">
+          <section className="rounded-xl border border-theme surface p-5 shadow-sm">
+            <h2 className="text-sm font-medium uppercase tracking-wider text-muted">
               Interface
             </h2>
             <div className="mt-4 space-y-3">
@@ -59,8 +59,8 @@ export default function Settings() {
             </div>
           </section>
 
-          <section className="rounded-xl border border-rose-200 bg-white/70 backdrop-blur p-5 shadow-sm">
-            <h2 className="text-sm font-medium uppercase tracking-wider text-zinc-500">
+          <section className="rounded-xl border border-theme surface p-5 shadow-sm">
+            <h2 className="text-sm font-medium uppercase tracking-wider text-muted">
               Notifications
             </h2>
             <div className="mt-4 flex items-center justify-between">
