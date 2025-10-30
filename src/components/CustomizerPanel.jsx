@@ -19,8 +19,8 @@ export default function CustomizerPanel({
   ];
 
   return (
-    <div className="rounded-xl border border-rose-200 p-4 bg-white/70 backdrop-blur shadow-sm">
-      <h2 className="text-sm font-medium uppercase tracking-wider text-zinc-500">
+    <div className="rounded-xl border border-[#31363F] p-4 bg-[#31363F]/70 backdrop-blur shadow-sm">
+      <h2 className="text-sm font-medium uppercase tracking-wider text-[#BDBDBD]">
         Customize
       </h2>
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -31,7 +31,7 @@ export default function CustomizerPanel({
               type="color"
               value={params.color}
               onChange={(e) => set("color", e.target.value)}
-              className="h-9 w-12 rounded border border-rose-200"
+              className="h-9 w-12 rounded border border-[#31363F] bg-[#222831]"
             />
             <div className="flex flex-wrap gap-2">
               {presets.map((c) => (
@@ -39,8 +39,8 @@ export default function CustomizerPanel({
                   key={c}
                   onClick={() => set("color", c)}
                   aria-pressed={params.color === c}
-                  className={`h-7 w-7 rounded-full border border-rose-200 ring-2 ring-transparent ${
-                    params.color === c ? "ring-rose-400" : ""
+                  className={`h-7 w-7 rounded-full border border-[#31363F] ring-2 ring-transparent ${
+                    params.color === c ? "ring-[#76ABAE]" : ""
                   }`}
                   style={{ background: c }}
                   title={c}
@@ -55,7 +55,7 @@ export default function CustomizerPanel({
           <select
             value={params.pattern}
             onChange={(e) => set("pattern", e.target.value)}
-            className="mt-2 w-full rounded-lg border border-rose-200 bg-white/60 px-3 py-2"
+            className="mt-2 w-full rounded-lg border border-[#31363F] bg-[#222831] text-[#EEEEEE] px-3 py-2"
           >
             <option value="solid">Solid</option>
             <option value="stripes">Stripes</option>
@@ -76,7 +76,7 @@ export default function CustomizerPanel({
           <select
             value={params.neckline}
             onChange={(e) => set("neckline", e.target.value)}
-            className="mt-2 w-full rounded-lg border border-rose-200 bg-white/60 px-3 py-2"
+            className="mt-2 w-full rounded-lg border border-[#31363F] bg-[#222831] text-[#EEEEEE] px-3 py-2"
           >
             <option value="v-neck">V‑neck</option>
             <option value="scoop">Scoop</option>
@@ -103,7 +103,7 @@ export default function CustomizerPanel({
           <select
             value={params.texture}
             onChange={(e) => set("texture", e.target.value)}
-            className="mt-2 w-full rounded-lg border border-rose-200 bg-white/60 px-3 py-2"
+            className="mt-2 w-full rounded-lg border border-[#31363F] bg-[#222831] text-[#EEEEEE] px-3 py-2"
           >
             <option value="silk">Silk</option>
             <option value="satin">Satin</option>
@@ -124,7 +124,7 @@ export default function CustomizerPanel({
         <button
           onClick={onSaveVariant}
           disabled={isGenerating}
-          className="inline-flex items-center gap-2 rounded-lg border border-rose-200 px-3 py-2 hover:bg-rose-100/50"
+          className="inline-flex items-center gap-2 rounded-lg border border-[#31363F] text-[#BDBDBD] px-3 py-2 hover:bg-[#31363F]"
         >
           <SaveIcon className="w-4 h-4" /> Save variant
         </button>
@@ -134,7 +134,7 @@ export default function CustomizerPanel({
 }
 
 function Label({ children }) {
-  return <div className="text-xs text-zinc-500">{children}</div>;
+  return <div className="text-xs text-[#BDBDBD]">{children}</div>;
 }
 
 function Slider({ label, value, onChange }) {
@@ -150,7 +150,7 @@ function Slider({ label, value, onChange }) {
         max={100}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-2 w-full accent-rose-600"
+        className="mt-2 w-full accent-[#76ABAE]"
       />
     </div>
   );

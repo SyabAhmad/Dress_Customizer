@@ -11,7 +11,9 @@ export default function Settings() {
       if (s.density) setDensity(s.density);
       if (typeof s.notifications === "boolean")
         setNotifications(s.notifications);
-    } catch {}
+    } catch {
+      /* noop: ignore JSON/localStorage errors */
+    }
   }, []);
 
   useEffect(() => {
@@ -20,59 +22,64 @@ export default function Settings() {
         "settings",
         JSON.stringify({ density, notifications })
       );
-    } catch {}
+    } catch {
+      /* noop */
+    }
   }, [density, notifications]);
 
   return (
-    <div className="min-h-screen bg-theme text-theme">
+    <div className="min-h-screen bg-[#222831] text-[#EEEEEE]">
       <Header />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
         <h1 className="text-2xl font-semibold font-['Playfair_Display']">
           Settings
         </h1>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          <section className="rounded-xl border border-theme surface p-5 shadow-sm">
-            <h2 className="text-sm font-medium uppercase tracking-wider text-muted">
+          <section className="rounded-xl border border-[#31363F] bg-[#31363F]/70 p-5 shadow-sm">
+            <h2 className="text-sm font-medium uppercase tracking-wider text-[#BDBDBD]">
               Interface
             </h2>
             <div className="mt-4 space-y-3">
-              <label className="flex items-center gap-2">
+              <label className="flex items-center gap-2 text-[#EEEEEE]">
                 <input
                   type="radio"
                   name="density"
                   value="comfortable"
                   checked={density === "comfortable"}
                   onChange={() => setDensity("comfortable")}
+                  style={{ accentColor: '#76ABAE' }}
                 />
                 Comfortable
               </label>
-              <label className="flex items-center gap-2">
+              <label className="flex items-center gap-2 text-[#EEEEEE]">
                 <input
                   type="radio"
                   name="density"
                   value="compact"
                   checked={density === "compact"}
                   onChange={() => setDensity("compact")}
+                  style={{ accentColor: '#76ABAE' }}
                 />
                 Compact
               </label>
             </div>
           </section>
 
-          <section className="rounded-xl border border-theme surface p-5 shadow-sm">
-            <h2 className="text-sm font-medium uppercase tracking-wider text-muted">
+          <section className="rounded-xl border border-[#31363F] bg-[#31363F]/70 p-5 shadow-sm">
+            <h2 className="text-sm font-medium uppercase tracking-wider text-[#BDBDBD]">
               Notifications
             </h2>
             <div className="mt-4 flex items-center justify-between">
-              <span>Email updates</span>
+              <span className="text-[#EEEEEE]">Email updates</span>
               <label className="inline-flex items-center gap-2 text-sm select-none">
                 <input
                   type="checkbox"
                   checked={notifications}
                   onChange={(e) => setNotifications(e.target.checked)}
-                  className="size-4 rounded border-zinc-300 text-rose-600"
+                  className="size-4 rounded border-[#3D434C] bg-[#222831]"
+                  style={{ accentColor: '#76ABAE' }}
                 />
-                {notifications ? "On" : "Off"}
+                <span className="text-[#BDBDBD]">{notifications ? "On" : "Off"}</span>
               </label>
             </div>
           </section>

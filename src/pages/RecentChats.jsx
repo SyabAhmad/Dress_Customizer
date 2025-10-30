@@ -32,7 +32,7 @@ export default function RecentChats() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-theme text-theme">
+    <div className="min-h-screen bg-[#222831] text-[#EEEEEE]">
       <Header />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
         <h1 className="text-2xl font-semibold font-['Playfair_Display']">
@@ -42,19 +42,15 @@ export default function RecentChats() {
           {chats.map((c) => (
             <article
               key={c.id}
-              className="rounded-xl border border-theme surface p-4 shadow-sm"
+              className="rounded-xl border border-[#31363F] bg-[#31363F]/70 p-4 shadow-sm"
             >
-              <div className="text-sm text-zinc-500">
+              <div className="text-sm text-[#BDBDBD]">
                 {new Date(c.date).toLocaleString()}
               </div>
               <div className="mt-1 font-medium">{c.title}</div>
               <div className="mt-3 flex gap-2">
-                <button className="text-xs px-3 py-1.5 rounded-md border border-theme hover:opacity-95">
-                  Open
-                </button>
-                <button className="text-xs px-3 py-1.5 rounded-md border border-theme hover:opacity-95">
-                  Duplicate
-                </button>
+                <button className="text-xs px-3 py-1.5 rounded-md bg-[#76ABAE] text-[#021018] hover:opacity-95">Open</button>
+                <button className="text-xs px-3 py-1.5 rounded-md border border-[#3D434C] text-[#EEEEEE] hover:bg-[#31363F]">Duplicate</button>
               </div>
             </article>
           ))}

@@ -78,15 +78,15 @@ export default function Studio() {
   };
 
   return (
-    <div className="min-h-screen bg-theme text-theme">
+    <div className="min-h-screen bg-[#222831] text-[#EEEEEE]">
       <Header />
       <main className="mx-auto max-w-7xl px-4 pb-8">
         {/* Layout with sidebar on the left */}
-        <div className="mt-6 lg:flex lg:gap-6">
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 lg:gap-6">
           {/* Sidebar (large screens) */}
-          <aside className="hidden lg:block w-56 shrink-0">
-            <nav className="rounded-xl border border-theme surface min-h-[520px] p-3 flex flex-col gap-2 shadow-sm">
-              <div className="px-2 pb-1 text-xs font-medium uppercase tracking-wider text-zinc-500">
+          <aside className="hidden lg:block lg:col-span-2 lg:-ml-4">
+            <nav className="sticky top-16 rounded-xl border border-[#31363F] bg-[#31363F]/70 h-[calc(100vh-4rem)] overflow-auto p-3 flex flex-col gap-2 shadow-sm">
+              <div className="px-2 pb-1 text-xs font-medium uppercase tracking-wider text-[#BDBDBD]">
                 Navigation
               </div>
               <SidebarItem
@@ -108,27 +108,27 @@ export default function Studio() {
           </aside>
 
           {/* Main content area */}
-          <div className="flex-1">
+          <div className="lg:col-span-10">
             {/* Inputs + Suggestions and Preview */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Left column: inputs and customization */}
-              <section className="lg:col-span-5 order-2 lg:order-1 flex flex-col gap-4">
-                <PromptBar
-                  prompt={prompt}
-                  onChange={setPrompt}
-                  onGenerate={onGenerate}
-                  isGenerating={isGenerating}
-                />
+              <section className="lg:col-span-7 order-2 lg:order-1 flex flex-col gap-4">
                 <CustomizerPanel
                   params={params}
                   setParams={setParams}
                   onSaveVariant={addVariant}
                   isGenerating={isGenerating}
                 />
+                <PromptBar
+                  prompt={prompt}
+                  onChange={setPrompt}
+                  onGenerate={onGenerate}
+                  isGenerating={isGenerating}
+                />
               </section>
 
               {/* Right column: big preview */}
-              <section className="lg:col-span-7 order-1 lg:order-2">
+              <section className="lg:col-span-5 order-1 lg:order-2">
                 <Preview
                   params={params}
                   ref={previewRef}
@@ -176,11 +176,11 @@ function SidebarItem({ icon, label, to, active = false }) {
       className={
         "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors " +
         (active
-          ? "bg-rose-100 text-rose-700"
-          : "text-zinc-700 hover:bg-rose-100 hover:text-rose-700")
+          ? "bg-[#31363F] text-[#EEEEEE] border border-[#76ABAE]"
+          : "text-[#BDBDBD] hover:bg-[#31363F] hover:text-[#EEEEEE]")
       }
     >
-      <span className="shrink-0 text-rose-500">{icon}</span>
+      <span className="shrink-0 text-[#76ABAE]">{icon}</span>
       <span className="truncate">{label}</span>
     </Link>
   );
