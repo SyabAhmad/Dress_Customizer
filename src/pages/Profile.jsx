@@ -45,20 +45,33 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-[#222831] text-[#EEEEEE]">
+    <div
+      className="min-h-screen"
+      style={{
+        background:
+          "linear-gradient(180deg,#0b0f21 0%,#2b0b4f 45%,#3a0f6a 100%)",
+        color: "#e6f7ff",
+      }}
+    >
       <Header />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-        <h1 className="text-2xl font-semibold font-['Playfair_Display']">
+        <h1
+          className="text-2xl font-semibold font-['Playfair_Display']"
+          style={{ color: "#37e6ff" }}
+        >
           Profile
         </h1>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           {/* Avatar Editor */}
-          <section className="md:col-span-2 rounded-xl border border-[#31363F] bg-[#31363F]/70 p-5 shadow-sm">
-            <h2 className="text-sm font-medium uppercase tracking-wider text-[#BDBDBD]">
+          <section
+            className="md:col-span-2 rounded-xl border p-5 bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] backdrop-blur-lg shadow-lg"
+            style={{ border: "1px solid rgba(15,23,42,0.04)" }}
+          >
+            <h2 className="text-sm font-medium uppercase tracking-wider text-[#3be8d0]">
               Avatar
             </h2>
-            <p className="mt-1 text-sm text-[#BDBDBD]">
-              Adjust your body avatar’s proportions to match your style.
+            <p className="mt-1 text-sm text-[#b6bfd0]">
+              Adjust your body avatar's proportions to match your style.
             </p>
             <div className="mt-4">
               <AvatarEditor
@@ -69,31 +82,42 @@ export default function Profile() {
             </div>
           </section>
 
-          <section className="rounded-xl border border-[#31363F] bg-[#31363F]/70 backdrop-blur p-5 shadow-sm">
-            <h2 className="text-sm font-medium uppercase tracking-wider text-[#BDBDBD]">
+          <section
+            className="rounded-xl border p-5 bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] backdrop-blur-lg shadow-lg"
+            style={{ border: "1px solid rgba(15,23,42,0.04)" }}
+          >
+            <h2 className="text-sm font-medium uppercase tracking-wider text-[#3be8d0]">
               Account
             </h2>
             <div className="mt-4">
-              <div className="text-sm text-[#BDBDBD]">Email</div>
-              <div className="mt-1 font-medium">
+              <div className="text-sm text-[#b6bfd0]">Email</div>
+              <div className="mt-1 font-medium" style={{ color: "#e6f7ff" }}>
                 {email || "guest@example.com"}
               </div>
             </div>
             <div className="mt-6 flex gap-2">
               <button
                 onClick={signOut}
-                className="rounded-md bg-[#76ABAE] text-[#021018] px-4 py-2 shadow hover:opacity-95"
+                className="rounded-lg font-medium shadow-lg transition-all duration-200 hover:scale-105"
+                style={{
+                  background: "linear-gradient(90deg,#7c5cff 0%,#3be8d0 100%)",
+                  color: "#021018",
+                  border: "none",
+                }}
               >
                 Sign out
               </button>
             </div>
           </section>
 
-          <section className="rounded-xl border border-[#31363F] bg-[#31363F]/70 backdrop-blur p-5 shadow-sm">
-            <h2 className="text-sm font-medium uppercase tracking-wider text-[#BDBDBD]">
+          <section
+            className="rounded-xl border p-5 bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] backdrop-blur-lg shadow-lg"
+            style={{ border: "1px solid rgba(15,23,42,0.04)" }}
+          >
+            <h2 className="text-sm font-medium uppercase tracking-wider text-[#3be8d0]">
               Billing
             </h2>
-            <p className="mt-3 text-sm text-[#BDBDBD]">
+            <p className="mt-3 text-sm text-[#b6bfd0]">
               No billing connected. This is a demo UI.
             </p>
           </section>

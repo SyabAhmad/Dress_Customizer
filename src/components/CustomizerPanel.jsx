@@ -19,8 +19,11 @@ export default function CustomizerPanel({
   ];
 
   return (
-    <div className="rounded-xl border border-[#31363F] p-4 bg-[#31363F]/70 backdrop-blur shadow-sm">
-      <h2 className="text-sm font-medium uppercase tracking-wider text-[#BDBDBD]">
+    <div
+      className="rounded-xl border p-4 bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] backdrop-blur-lg shadow-lg"
+      style={{ border: "1px solid rgba(15,23,42,0.04)" }}
+    >
+      <h2 className="text-sm font-medium uppercase tracking-wider text-[#3be8d0]">
         Customize
       </h2>
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -31,7 +34,7 @@ export default function CustomizerPanel({
               type="color"
               value={params.color}
               onChange={(e) => set("color", e.target.value)}
-              className="h-9 w-12 rounded border border-[#31363F] bg-[#222831]"
+              className="h-9 w-12 rounded-lg border border-[rgba(124,92,255,0.3)] bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)]"
             />
             <div className="flex flex-wrap gap-2">
               {presets.map((c) => (
@@ -39,8 +42,10 @@ export default function CustomizerPanel({
                   key={c}
                   onClick={() => set("color", c)}
                   aria-pressed={params.color === c}
-                  className={`h-7 w-7 rounded-full border border-[#31363F] ring-2 ring-transparent ${
-                    params.color === c ? "ring-[#76ABAE]" : ""
+                  className={`h-7 w-7 rounded-full border-2 border-transparent ring-2 ring-transparent transition-all duration-200 hover:scale-110 ${
+                    params.color === c
+                      ? "ring-[linear-gradient(90deg,#7c5cff 0%,#3be8d0 100%)] ring-offset-2"
+                      : "hover:ring-[rgba(124,92,255,0.5)]"
                   }`}
                   style={{ background: c }}
                   title={c}
@@ -55,7 +60,7 @@ export default function CustomizerPanel({
           <select
             value={params.pattern}
             onChange={(e) => set("pattern", e.target.value)}
-            className="mt-2 w-full rounded-lg border border-[#31363F] bg-[#222831] text-[#EEEEEE] px-3 py-2"
+            className="mt-2 w-full rounded-lg border border-[rgba(124,92,255,0.3)] bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] text-[#e6f7ff] px-3 py-2 backdrop-blur-sm"
           >
             <option value="solid">Solid</option>
             <option value="stripes">Stripes</option>
@@ -76,7 +81,7 @@ export default function CustomizerPanel({
           <select
             value={params.neckline}
             onChange={(e) => set("neckline", e.target.value)}
-            className="mt-2 w-full rounded-lg border border-[#31363F] bg-[#222831] text-[#EEEEEE] px-3 py-2"
+            className="mt-2 w-full rounded-lg border border-[rgba(124,92,255,0.3)] bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] text-[#e6f7ff] px-3 py-2 backdrop-blur-sm"
           >
             <option value="v-neck">V‑neck</option>
             <option value="scoop">Scoop</option>
@@ -103,7 +108,7 @@ export default function CustomizerPanel({
           <select
             value={params.texture}
             onChange={(e) => set("texture", e.target.value)}
-            className="mt-2 w-full rounded-lg border border-[#31363F] bg-[#222831] text-[#EEEEEE] px-3 py-2"
+            className="mt-2 w-full rounded-lg border border-[rgba(124,92,255,0.3)] bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] text-[#e6f7ff] px-3 py-2 backdrop-blur-sm"
           >
             <option value="silk">Silk</option>
             <option value="satin">Satin</option>
@@ -124,7 +129,12 @@ export default function CustomizerPanel({
         <button
           onClick={onSaveVariant}
           disabled={isGenerating}
-          className="inline-flex items-center gap-2 rounded-lg border border-[#31363F] text-[#BDBDBD] px-3 py-2 hover:bg-[#31363F]"
+          className="inline-flex items-center gap-2 rounded-lg px-3 py-2 font-medium shadow-lg transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{
+            background: "linear-gradient(90deg,#7c5cff 0%,#3be8d0 100%)",
+            color: "#021018",
+            border: "none",
+          }}
         >
           <SaveIcon className="w-4 h-4" /> Save variant
         </button>
@@ -134,7 +144,7 @@ export default function CustomizerPanel({
 }
 
 function Label({ children }) {
-  return <div className="text-xs text-[#BDBDBD]">{children}</div>;
+  return <div className="text-xs text-[#3be8d0] font-medium">{children}</div>;
 }
 
 function Slider({ label, value, onChange }) {
@@ -142,7 +152,7 @@ function Slider({ label, value, onChange }) {
     <div>
       <Label>
         {label}
-        <span className="ml-2 text-zinc-400">{value}</span>
+        <span className="ml-2 text-[#b6bfd0] font-normal">{value}</span>
       </Label>
       <input
         type="range"
@@ -150,7 +160,12 @@ function Slider({ label, value, onChange }) {
         max={100}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-2 w-full accent-[#76ABAE]"
+        className="mt-2 w-full h-2 rounded-lg appearance-none cursor-pointer"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(124,92,255,0.3) 0%, rgba(59,232,208,0.3) 100%)",
+          outline: "none",
+        }}
       />
     </div>
   );

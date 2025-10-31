@@ -13,27 +13,35 @@ export default function PromptBar({
 
   return (
     <section className="mt-0">
-      <div className="rounded-xl border border-[#31363F] p-4 bg-[#31363F]/70 backdrop-blur shadow-sm">
+      <div
+        className="rounded-xl border p-4 bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] backdrop-blur-lg shadow-lg"
+        style={{ border: "1px solid rgba(15,23,42,0.04)" }}
+      >
         <div className="flex flex-col md:flex-row gap-3">
           <textarea
             value={prompt}
             onChange={(e) => onChange(e.target.value)}
             rows={2}
-            placeholder="Describe your dress… e.g. ‘Generate a blue evening gown with lace sleeves and a long train.’"
-            className="flex-1 resize-none rounded-lg border border-[#31363F] bg-[#222831] text-[#EEEEEE] placeholder-[#BDBDBD] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#76ABAE]/50"
+            placeholder="Describe your dress… e.g. 'Generate a blue evening gown with lace sleeves and a long train.'"
+            className="flex-1 resize-none rounded-lg border border-[rgba(124,92,255,0.3)] bg-gradient-to-br from-[rgba(124,92,255,0.05)] to-[rgba(59,232,208,0.05)] text-[#e6f7ff] placeholder-[#b6bfd0] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[linear-gradient(90deg,#7c5cff 0%,#3be8d0 100%)]/50 backdrop-blur-sm"
           />
           <button
             onClick={onGenerate}
             disabled={isGenerating || !prompt.trim()}
-            className="w-full md:w-auto md:self-start inline-flex items-center justify-center whitespace-nowrap rounded-lg bg-[#76ABAE] text-[#222831] px-4 py-2.5 text-sm font-medium shadow hover:bg-[#5E9396] disabled:opacity-50"
+            className="w-full md:w-auto md:self-start inline-flex items-center justify-center whitespace-nowrap rounded-lg font-medium shadow-lg transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{
+              background: "linear-gradient(90deg,#7c5cff 0%,#3be8d0 100%)",
+              color: "#021018",
+              border: "none",
+            }}
           >
             {isGenerating ? (
               <span className="inline-flex items-center gap-2">
-                <Spinner className="w-4 h-4 text-[#222831]" /> Generating…
+                <Spinner className="w-4 h-4 text-[#021018]" /> Generating…
               </span>
             ) : (
               <span className="inline-flex items-center gap-2">
-                <WandIcon className="w-4 h-4 text-[#222831]" /> Generate
+                <WandIcon className="w-4 h-4 text-[#021018]" /> Generate
               </span>
             )}
           </button>
@@ -43,7 +51,7 @@ export default function PromptBar({
             <button
               key={s}
               onClick={() => onChange(s)}
-              className="text-xs px-2.5 py-1 rounded-md border border-[#31363F] text-[#BDBDBD] hover:bg-[#31363F]"
+              className="text-xs px-2.5 py-1 rounded-lg border border-[rgba(124,92,255,0.3)] text-[#b6bfd0] hover:bg-gradient-to-r hover:from-[rgba(124,92,255,0.2)] hover:to-[rgba(59,232,208,0.2)] transition-all duration-200"
             >
               {s}
             </button>

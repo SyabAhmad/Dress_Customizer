@@ -44,7 +44,7 @@ export default function AvatarEditor({
   return (
     <div className={"grid gap-5 lg:grid-cols-2 " + className}>
       <div className="rounded-xl border border-[#31363F] bg-[#222831] p-3 flex items-center justify-center">
-        <div className="w-full max-w-sm aspect-5/7 rounded-md bg-[#1E2329] grid place-items-center">
+        <div className="w-full max-w-sm aspect-5/7 rounded-md bg-gradient-to-br from-[#1E2329] to-[#2a3138] grid place-items-center">
           <svg
             viewBox="0 0 200 280"
             className="w-full h-full"
@@ -55,117 +55,389 @@ export default function AvatarEditor({
               transform={`translate(100,20) scale(${metrics.scaleX} ${metrics.scaleY}) translate(-100,-20)`}
               style={{ transition: "transform 120ms ease" }}
             >
-              {/* Head */}
+              {/* Advanced realistic body gradients for anatomical accuracy */}
+              <defs>
+                {/* Realistic multi-tone skin gradients */}
+                <radialGradient id="faceGradient" cx="45%" cy="25%" r="60%">
+                  <stop offset="0%" stopColor="#FEE5D9" />
+                  <stop offset="40%" stopColor="#FDBCB4" />
+                  <stop offset="80%" stopColor="#F4A460" />
+                  <stop offset="100%" stopColor="#DEB887" />
+                </radialGradient>
+
+                <radialGradient id="bodyGradient" cx="50%" cy="30%" r="70%">
+                  <stop offset="0%" stopColor="#FDBCB4" />
+                  <stop offset="50%" stopColor="#F4A460" />
+                  <stop offset="100%" stopColor="#D2691E" />
+                </radialGradient>
+
+                {/* Realistic shadow gradients */}
+                <radialGradient id="faceShadow" cx="60%" cy="40%" r="50%">
+                  <stop offset="0%" stopColor="transparent" />
+                  <stop offset="70%" stopColor="#000000" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="#000000" stopOpacity="0.4" />
+                </radialGradient>
+
+                <linearGradient
+                  id="bodyShadow"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stopColor="transparent" />
+                  <stop offset="100%" stopColor="#000000" stopOpacity="0.3" />
+                </linearGradient>
+
+                {/* Realistic fabric gradients */}
+                <linearGradient
+                  id="shirtGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="0%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stopColor="#E8F4FD" />
+                  <stop offset="50%" stopColor="#B8D4E8" />
+                  <stop offset="100%" stopColor="#7FA4C4" />
+                </linearGradient>
+
+                <linearGradient
+                  id="pantsGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="0%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stopColor="#8B9DC3" />
+                  <stop offset="50%" stopColor="#5A6B8C" />
+                  <stop offset="100%" stopColor="#3D4A63" />
+                </linearGradient>
+              </defs>
+
+              {/* Realistic head with anatomical accuracy */}
               <ellipse
                 cx={100}
                 cy={metrics.headCY}
                 rx={metrics.headR}
                 ry={metrics.headR * 1.1}
-                fill="#76ABAE"
-                opacity="0.95"
-              />
-              {/* Neck */}
-              <rect
-                x={100 - 6}
-                y={metrics.neckY}
-                width={12}
-                height={10}
-                rx={3}
-                fill="#99C7C9"
-                opacity="0.9"
+                fill="url(#faceGradient)"
+                stroke="#D2691E"
+                strokeWidth="0.3"
               />
 
-              {/* Torso (with shoulders, waist, hips) */}
+              {/* Realistic facial features */}
+              {/* Eyes with iris and realistic shading */}
+              <ellipse
+                cx={92}
+                cy={metrics.headCY - 3}
+                rx="2.2"
+                ry="3.2"
+                fill="#2C1810"
+              />
+              <ellipse
+                cx={108}
+                cy={metrics.headCY - 3}
+                rx="2.2"
+                ry="3.2"
+                fill="#2C1810"
+              />
+              <ellipse
+                cx={92.5}
+                cy={metrics.headCY - 2.5}
+                rx="1"
+                ry="1.5"
+                fill="#4A4A4A"
+              />
+              <ellipse
+                cx={108.5}
+                cy={metrics.headCY - 2.5}
+                rx="1"
+                ry="1.5"
+                fill="#4A4A4A"
+              />
+              <ellipse
+                cx={92.8}
+                cy={metrics.headCY - 3}
+                rx="0.4"
+                ry="0.6"
+                fill="#FFFFFF"
+              />
+              <ellipse
+                cx={108.8}
+                cy={metrics.headCY - 3}
+                rx="0.4"
+                ry="0.6"
+                fill="#FFFFFF"
+              />
+
+              {/* Realistic nose with shading */}
+              <path
+                d="M 100 25 Q 98 28 100 31 Q 102 28 100 25"
+                fill="#DEB887"
+                stroke="#D2691E"
+                strokeWidth="0.4"
+              />
+              <path
+                d="M 100 26 Q 99 28 100 30"
+                stroke="#F4A460"
+                strokeWidth="0.3"
+                fill="none"
+              />
+
+              {/* Realistic mouth with lip shading */}
+              <ellipse cx={100} cy={35} rx="4" ry="2" fill="#CD853F" />
+              <path
+                d="M 96 35 Q 100 37 104 35"
+                stroke="#8B4513"
+                strokeWidth="0.6"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <ellipse
+                cx={100}
+                cy={35.5}
+                rx="3.5"
+                ry="1.5"
+                fill="#F4A460"
+                opacity="0.7"
+              />
+
+              {/* Realistic ears */}
+              <ellipse
+                cx={85}
+                cy={metrics.headCY}
+                rx="3"
+                ry="5"
+                fill="url(#faceGradient)"
+                stroke="#D2691E"
+                strokeWidth="0.3"
+              />
+              <ellipse
+                cx={115}
+                cy={metrics.headCY}
+                rx="3"
+                ry="5"
+                fill="url(#faceGradient)"
+                stroke="#D2691E"
+                strokeWidth="0.3"
+              />
+
+              {/* Realistic neck with anatomical shading */}
+              <ellipse
+                cx={100}
+                cy={metrics.neckY + 5}
+                rx={8}
+                ry={10}
+                fill="url(#bodyGradient)"
+                stroke="#D2691E"
+                strokeWidth="0.3"
+              />
+              <ellipse
+                cx={100}
+                cy={metrics.neckY + 5}
+                rx={8}
+                ry={10}
+                fill="url(#bodyShadow)"
+              />
+
+              {/* Realistic hair with natural flow */}
+              <ellipse
+                cx={100}
+                cy={metrics.headCY - 10}
+                rx={metrics.headR + 3}
+                ry={metrics.headR * 0.9}
+                fill="#3C2414"
+                opacity="0.95"
+              />
+              <path
+                d="M 85 15 Q 100 8 115 15 Q 113 12 100 10 Q 87 12 85 15"
+                fill="#2C1810"
+              />
+              <path
+                d="M 88 18 Q 100 13 112 18"
+                stroke="#1A0F08"
+                strokeWidth="0.5"
+                fill="none"
+              />
+
+              {/* Realistic torso with anatomical proportions */}
               <path
                 d={metrics.torsoPath}
-                fill="#76ABAE"
-                opacity="0.88"
-                stroke="#0f1520"
-                strokeOpacity="0.25"
-                strokeWidth="0.8"
+                fill="url(#shirtGradient)"
+                stroke="#5A7CA5"
+                strokeWidth="0.6"
                 strokeLinejoin="round"
               />
 
-              {/* Arms with elbows and hands */}
+              {/* Realistic shirt details */}
+              <ellipse
+                cx={100}
+                cy={metrics.neckY + 8}
+                rx={7}
+                ry={5}
+                fill="#FFFFFF"
+                opacity="0.95"
+              />
+              <circle cx={100} cy={metrics.neckY + 15} r="1.2" fill="#7FA4C4" />
+              <circle cx={100} cy={metrics.neckY + 20} r="1.2" fill="#7FA4C4" />
+              <circle cx={100} cy={metrics.neckY + 25} r="1.2" fill="#7FA4C4" />
+
+              {/* Realistic collar bones */}
+              <path
+                d="M 93 18 Q 100 20 107 18"
+                stroke="#5A7CA5"
+                strokeWidth="0.8"
+                fill="none"
+                strokeLinecap="round"
+              />
+
+              {/* Realistic arms with anatomical accuracy */}
               <path
                 d={metrics.leftArmPath}
-                fill="#6DA0A3"
-                opacity="0.9"
-                stroke="#0f1520"
-                strokeOpacity="0.25"
-                strokeWidth="0.8"
+                fill="url(#bodyGradient)"
+                stroke="#D2691E"
+                strokeWidth="0.4"
                 strokeLinejoin="round"
               />
               <path
                 d={metrics.rightArmPath}
-                fill="#6DA0A3"
-                opacity="0.9"
-                stroke="#0f1520"
-                strokeOpacity="0.25"
-                strokeWidth="0.8"
+                fill="url(#bodyGradient)"
+                stroke="#D2691E"
+                strokeWidth="0.4"
                 strokeLinejoin="round"
               />
+
+              {/* Realistic hands with finger details */}
               <ellipse
                 cx={metrics.leftHand.cx}
                 cy={metrics.leftHand.cy}
                 rx={metrics.leftHand.r}
-                ry={metrics.leftHand.r * 0.7}
-                fill="#6DA0A3"
+                ry={metrics.leftHand.r * 0.8}
+                fill="url(#bodyGradient)"
+                stroke="#D2691E"
+                strokeWidth="0.3"
               />
               <ellipse
                 cx={metrics.rightHand.cx}
                 cy={metrics.rightHand.cy}
                 rx={metrics.rightHand.r}
-                ry={metrics.rightHand.r * 0.7}
-                fill="#6DA0A3"
+                ry={metrics.rightHand.r * 0.8}
+                fill="url(#bodyGradient)"
+                stroke="#D2691E"
+                strokeWidth="0.3"
               />
 
-              {/* Legs with knees */}
+              {/* Finger details */}
+              <ellipse
+                cx={metrics.leftHand.cx - 3}
+                cy={metrics.leftHand.cy + 2}
+                rx="1.5"
+                ry="2"
+                fill="url(#bodyGradient)"
+              />
+              <ellipse
+                cx={metrics.rightHand.cx + 3}
+                cy={metrics.rightHand.cy + 2}
+                rx="1.5"
+                ry="2"
+                fill="url(#bodyGradient)"
+              />
+
+              {/* Realistic legs with anatomical proportions */}
               <path
                 d={metrics.leftLegPath}
-                fill="#5B8B8E"
-                opacity="0.95"
-                stroke="#0f1520"
-                strokeOpacity="0.25"
-                strokeWidth="0.8"
+                fill="url(#pantsGradient)"
+                stroke="#4A5A73"
+                strokeWidth="0.6"
                 strokeLinejoin="round"
               />
               <path
                 d={metrics.rightLegPath}
-                fill="#5B8B8E"
-                opacity="0.95"
-                stroke="#0f1520"
-                strokeOpacity="0.25"
-                strokeWidth="0.8"
+                fill="url(#pantsGradient)"
+                stroke="#4A5A73"
+                strokeWidth="0.6"
                 strokeLinejoin="round"
               />
 
-              {/* Feet */}
+              {/* Realistic knee shading */}
+              <ellipse
+                cx={100 - 14}
+                cy={metrics.kneeY}
+                rx="6"
+                ry="3"
+                fill="#6B7B8C"
+                opacity="0.6"
+              />
+              <ellipse
+                cx={100 + 14}
+                cy={metrics.kneeY}
+                rx="6"
+                ry="3"
+                fill="#6B7B8C"
+                opacity="0.6"
+              />
+
+              {/* Realistic feet with shoe details */}
               <ellipse
                 cx={metrics.leftFoot.cx}
                 cy={metrics.leftFoot.cy}
                 rx={metrics.leftFoot.rx}
                 ry={metrics.leftFoot.ry}
-                fill="#5B8B8E"
-                opacity="0.95"
+                fill="#2C3E50"
+                stroke="#1A252F"
+                strokeWidth="0.4"
               />
               <ellipse
                 cx={metrics.rightFoot.cx}
                 cy={metrics.rightFoot.cy}
                 rx={metrics.rightFoot.rx}
                 ry={metrics.rightFoot.ry}
-                fill="#5B8B8E"
-                opacity="0.95"
+                fill="#2C3E50"
+                stroke="#1A252F"
+                strokeWidth="0.4"
               />
 
-              {/* Subtle highlight */}
+              {/* Shoe details */}
               <ellipse
-                cx="118"
-                cy="125"
+                cx={metrics.leftFoot.cx}
+                cy={metrics.leftFoot.cy}
+                rx="6"
+                ry="2"
+                fill="#34495E"
+              />
+              <ellipse
+                cx={metrics.rightFoot.cx}
+                cy={metrics.rightFoot.cy}
+                rx="6"
+                ry="2"
+                fill="#34495E"
+              />
+
+              {/* Realistic body highlights and shadows */}
+              <ellipse
+                cx="115"
+                cy="120"
+                rx="20"
+                ry="50"
+                fill="#FFFFFF"
+                opacity="0.08"
+              />
+              <ellipse
+                cx="85"
+                cy="140"
+                rx="15"
+                ry="35"
+                fill="#000000"
+                opacity="0.2"
+              />
+              <ellipse
+                cx="105"
+                cy="200"
                 rx="12"
-                ry="34"
-                fill="#ffffff"
-                opacity="0.04"
+                ry="25"
+                fill="#000000"
+                opacity="0.15"
               />
             </g>
           </svg>
@@ -532,5 +804,6 @@ function computeMetrics({
     rightLegPath,
     leftFoot,
     rightFoot,
+    kneeY,
   };
 }
