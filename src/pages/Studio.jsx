@@ -78,15 +78,30 @@ export default function Studio() {
   };
 
   return (
-    <div className="min-h-screen bg-[#222831] text-[#EEEEEE]">
+    <div
+      className="min-h-screen"
+      style={{
+        background:
+          "linear-gradient(180deg,#0b0f21 0%,#2b0b4f 45%,#3a0f6a 100%)",
+        color: "#e6f7ff",
+      }}
+    >
       <Header />
       <main className="mx-auto max-w-7xl px-4 pb-8">
         {/* Layout with sidebar on the left */}
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 lg:gap-6">
           {/* Sidebar (large screens) */}
           <aside className="hidden lg:block lg:col-span-2 lg:-ml-4">
-            <nav className="sticky top-16 rounded-xl border border-[#31363F] bg-[#31363F]/70 h-[calc(100vh-4rem)] overflow-auto p-3 flex flex-col gap-2 shadow-sm">
-              <div className="px-2 pb-1 text-xs font-medium uppercase tracking-wider text-[#BDBDBD]">
+            <nav
+              className="sticky top-16 rounded-xl border h-[calc(100vh-4rem)] overflow-auto p-3 flex flex-col gap-2 shadow-sm"
+              style={{
+                border: "1px solid rgba(15,23,42,0.04)",
+                background:
+                  "linear-gradient(135deg, rgba(124,92,255,0.1), rgba(59,232,208,0.1))",
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              <div className="px-2 pb-1 text-xs font-medium uppercase tracking-wider text-[#3be8d0]">
                 Navigation
               </div>
               <SidebarItem
@@ -176,11 +191,11 @@ function SidebarItem({ icon, label, to, active = false }) {
       className={
         "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors " +
         (active
-          ? "bg-[#31363F] text-[#EEEEEE] border border-[#76ABAE]"
-          : "text-[#BDBDBD] hover:bg-[#31363F] hover:text-[#EEEEEE]")
+          ? "bg-gradient-to-r from-[#7c5cff] to-[#3be8d0] text-[#021018] border border-transparent"
+          : "text-[#b6bfd0] hover:bg-gradient-to-r hover:from-[#7c5cff] hover:to-[#3be8d0] hover:text-[#021018]")
       }
     >
-      <span className="shrink-0 text-[#76ABAE]">{icon}</span>
+      <span className="shrink-0 text-[#7c5cff]">{icon}</span>
       <span className="truncate">{label}</span>
     </Link>
   );
