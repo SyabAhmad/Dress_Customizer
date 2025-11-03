@@ -20,10 +20,15 @@ export default function CustomizerPanel({
 
   return (
     <div
-      className="rounded-xl border p-4 bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] backdrop-blur-lg shadow-lg"
-      style={{ border: "1px solid rgba(15,23,42,0.04)" }}
+      className="rounded-xl border p-4 backdrop-blur-lg shadow-lg"
+      style={{
+        border: "1px solid rgba(255,255,255,0.3)",
+        background:
+          "linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2))",
+        color: "#001a33",
+      }}
     >
-      <h2 className="text-sm font-medium uppercase tracking-wider text-[#3be8d0]">
+      <h2 className="text-sm font-medium uppercase tracking-wider text-[#0066cc]">
         Customize
       </h2>
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -60,7 +65,12 @@ export default function CustomizerPanel({
           <select
             value={params.pattern}
             onChange={(e) => set("pattern", e.target.value)}
-            className="mt-2 w-full rounded-lg border border-[rgba(124,92,255,0.3)] bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] text-[#e6f7ff] px-3 py-2 backdrop-blur-sm"
+            className="mt-2 w-full rounded-lg border px-3 py-2 backdrop-blur-sm"
+            style={{
+              border: "1px solid rgba(255,255,255,0.3)",
+              background: "rgba(255,255,255,0.3)",
+              color: "#001a33",
+            }}
           >
             <option value="solid">Solid</option>
             <option value="stripes">Stripes</option>
@@ -81,7 +91,12 @@ export default function CustomizerPanel({
           <select
             value={params.neckline}
             onChange={(e) => set("neckline", e.target.value)}
-            className="mt-2 w-full rounded-lg border border-[rgba(124,92,255,0.3)] bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] text-[#e6f7ff] px-3 py-2 backdrop-blur-sm"
+            className="mt-2 w-full rounded-lg border px-3 py-2 backdrop-blur-sm"
+            style={{
+              border: "1px solid rgba(255,255,255,0.3)",
+              background: "rgba(255,255,255,0.3)",
+              color: "#001a33",
+            }}
           >
             <option value="v-neck">V‑neck</option>
             <option value="scoop">Scoop</option>
@@ -108,7 +123,12 @@ export default function CustomizerPanel({
           <select
             value={params.texture}
             onChange={(e) => set("texture", e.target.value)}
-            className="mt-2 w-full rounded-lg border border-[rgba(124,92,255,0.3)] bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] text-[#e6f7ff] px-3 py-2 backdrop-blur-sm"
+            className="mt-2 w-full rounded-lg border px-3 py-2 backdrop-blur-sm"
+            style={{
+              border: "1px solid rgba(255,255,255,0.3)",
+              background: "rgba(255,255,255,0.3)",
+              color: "#001a33",
+            }}
           >
             <option value="silk">Silk</option>
             <option value="satin">Satin</option>
@@ -131,8 +151,8 @@ export default function CustomizerPanel({
           disabled={isGenerating}
           className="inline-flex items-center gap-2 rounded-lg px-3 py-2 font-medium shadow-lg transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
           style={{
-            background: "linear-gradient(90deg,#7c5cff 0%,#3be8d0 100%)",
-            color: "#021018",
+            background: "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)",
+            color: "#ffffff",
             border: "none",
           }}
         >
@@ -144,7 +164,11 @@ export default function CustomizerPanel({
 }
 
 function Label({ children }) {
-  return <div className="text-xs text-[#3be8d0] font-medium">{children}</div>;
+  return (
+    <div className="text-xs font-medium" style={{ color: "#001a33" }}>
+      {children}
+    </div>
+  );
 }
 
 function Slider({ label, value, onChange }) {
@@ -152,7 +176,9 @@ function Slider({ label, value, onChange }) {
     <div>
       <Label>
         {label}
-        <span className="ml-2 text-[#b6bfd0] font-normal">{value}</span>
+        <span className="ml-2 font-normal" style={{ color: "#0066cc" }}>
+          {value}
+        </span>
       </Label>
       <input
         type="range"
@@ -163,7 +189,7 @@ function Slider({ label, value, onChange }) {
         className="mt-2 w-full h-2 rounded-lg appearance-none cursor-pointer"
         style={{
           background:
-            "linear-gradient(90deg, rgba(124,92,255,0.3) 0%, rgba(59,232,208,0.3) 100%)",
+            "linear-gradient(90deg, rgba(0,102,204,0.5) 0%, rgba(0,153,255,0.5) 100%)",
           outline: "none",
         }}
       />

@@ -24,3 +24,9 @@ dist-ssr
 *.sw?
 
 TODO.md
+
+
+.env
+__pycache__
+*.pyc
+
