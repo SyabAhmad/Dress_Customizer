@@ -18,16 +18,24 @@ export default function Studio() {
     texture: "satin",
     textureIntensity: 40,
     skirtVolume: 60,
+    prompt: "",
   });
   const [variants, setVariants] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [useAI, setUseAI] = useState(false);
   const previewRef = useRef(null);
 
   const onGenerate = async () => {
     setIsGenerating(true);
-    const updated = parsePromptToParams(prompt, params);
-    await new Promise((r) => setTimeout(r, 500));
-    setParams(updated);
+    if (useAI) {
+      // AI generation - no need to parse prompt, just use the prompt directly
+      await new Promise((r) => setTimeout(r, 1000)); // Simulate some delay
+    } else {
+      // SVG generation - parse prompt to params
+      const updated = parsePromptToParams(prompt, params);
+      setParams(updated);
+      await new Promise((r) => setTimeout(r, 500));
+    }
     setIsGenerating(false);
   };
 
@@ -82,8 +90,8 @@ export default function Studio() {
       className="min-h-screen"
       style={{
         background:
-          "linear-gradient(180deg,#0b0f21 0%,#2b0b4f 45%,#3a0f6a 100%)",
-        color: "#e6f7ff",
+          "linear-gradient(180deg, #87CEEB 0%, #87CEEB 30%, #ADD8E6 70%, #E0F6FF 100%)",
+        color: "#001a33",
       }}
     >
       <Header />
@@ -95,17 +103,19 @@ export default function Studio() {
             <nav
               className="sticky top-16 rounded-xl border h-[calc(100vh-4rem)] overflow-auto p-3 flex flex-col gap-2 shadow-sm"
               style={{
-                border: "1px solid rgba(15,23,42,0.04)",
+                border: "1px solid rgba(255,255,255,0.3)",
                 background:
-                  "linear-gradient(135deg, rgba(124,92,255,0.1), rgba(59,232,208,0.1))",
+                  "linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2))",
                 backdropFilter: "blur(10px)",
+                color: "#001a33",
               }}
             >
-              <div className="px-2 pb-1 text-xs font-medium uppercase tracking-wider text-[#3be8d0]">
+              <div className="px-2 pb-1 text-xs font-medium uppercase tracking-wider text-[#0066cc]">
                 Navigation
               </div>
               <SidebarItem
                 to="/settings"
+                className
                 icon={<SettingsIcon className="w-4 h-4" />}
                 label="Settings"
               />
@@ -133,13 +143,18 @@ export default function Studio() {
                   setParams={setParams}
                   onSaveVariant={addVariant}
                   isGenerating={isGenerating}
-                />
-                <PromptBar
-                  prompt={prompt}
-                  onChange={setPrompt}
+                  useAI={useAI}
+                  setUseAI={setUseAI}
                   onGenerate={onGenerate}
-                  isGenerating={isGenerating}
                 />
+                {!useAI && (
+                  <PromptBar
+                    prompt={prompt}
+                    onChange={setPrompt}
+                    onGenerate={onGenerate}
+                    isGenerating={isGenerating}
+                  />
+                )}
               </section>
 
               {/* Right column: big preview */}
@@ -150,6 +165,7 @@ export default function Studio() {
                   isGenerating={isGenerating}
                   onExportSvg={exportSvg}
                   onExportPng={exportPng}
+                  useAI={useAI}
                 />
               </section>
             </div>
@@ -189,14 +205,27 @@ function SidebarItem({ icon, label, to, active = false }) {
     <Link
       to={to}
       className={
-        "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors " +
+        "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors " +
         (active
-          ? "bg-gradient-to-r from-[#7c5cff] to-[#3be8d0] text-[#021018] border border-transparent"
-          : "text-[#b6bfd0] hover:bg-gradient-to-r hover:from-[#7c5cff] hover:to-[#3be8d0] hover:text-[#021018]")
+          ? "bg-gradient-to-r from-[#87ceeb] to-[#0099ff] text-[#001a33] border border-transparent"
+          : "text-[#0066cc] hover:bg-gradient-to-r hover:from-[#b3e0ff] hover:to-[#87ceeb] hover:text-[#001a33]")
       }
+      style={{
+        border: active ? "1px solid #0099ff" : "1px solid transparent",
+      }}
     >
-      <span className="shrink-0 text-[#7c5cff]">{icon}</span>
-      <span className="truncate">{label}</span>
+      <span
+        className="shrink-0"
+        style={{ color: active ? "#0099ff" : "#0066cc" }}
+      >
+        {icon}
+      </span>
+      <span
+        className="truncate"
+        style={{ color: active ? "#0099ff" : "#0066cc", letterSpacing: 1 }}
+      >
+        {label}
+      </span>
     </Link>
   );
 }

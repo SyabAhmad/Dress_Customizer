@@ -3,7 +3,10 @@ export default function VariantsTray({ variants, onSelect }) {
   return (
     <section className="mt-8">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium uppercase tracking-wider text-[#BDBDBD]">
+        <h3
+          className="text-sm font-medium uppercase tracking-wider"
+          style={{ color: "#0066cc" }}
+        >
           Variants
         </h3>
       </div>
@@ -12,15 +15,27 @@ export default function VariantsTray({ variants, onSelect }) {
           <button
             key={v.id}
             onClick={() => onSelect(v)}
-            className="shrink-0 w-32 rounded-lg border border-[#31363F] overflow-hidden hover:ring-2 hover:ring-[#76ABAE]/50 snap-start bg-[#31363F]/70 backdrop-blur"
+            className="shrink-0 w-32 rounded-lg border overflow-hidden hover:ring-2 snap-start backdrop-blur"
             title={new Date(v.timestamp).toLocaleString()}
+            style={{
+              border: "1px solid rgba(255,255,255,0.3)",
+              background: "rgba(255,255,255,0.2)",
+            }}
           >
             <img
               src={v.thumb}
               alt={v.name}
-              className="w-full h-40 object-cover bg-[#222831]"
+              className="w-full h-40 object-cover"
+              style={{ background: "rgba(255,255,255,0.3)" }}
             />
-            <div className="px-2 py-1 text-[11px] text-left truncate bg-[#31363F] text-[#BDBDBD]">
+            <div
+              className="px-2 py-1 text-[11px] text-left truncate"
+              style={{
+                background: "rgba(255,255,255,0.2)",
+                color: "#001a33",
+                border: "1px solid rgba(255,255,255,0.3)",
+              }}
+            >
               {v.name}
             </div>
           </button>

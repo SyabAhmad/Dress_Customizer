@@ -1,7 +1,12 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState, useEffect } from "react";
+import { designsAPI } from "./api";
 
 // Generates a simple stylized dress as SVG with customizable parameters
-export const DressSVG = forwardRef(function DressSVG({ params }, ref) {
+// Can also generate AI images using Stable Diffusion
+export const DressSVG = forwardRef(function DressSVG(
+  { params, useAI = false },
+  ref
+) {
   const {
     color = "#2457F5",
     pattern = "solid",
@@ -10,8 +15,72 @@ export const DressSVG = forwardRef(function DressSVG({ params }, ref) {
     trainLength = 50,
     textureIntensity = 40,
     skirtVolume = 60,
+    prompt = "",
   } = params || {};
 
+  const [aiImageUrl, setAiImageUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Generate AI image when useAI is true and prompt is provided
+  useEffect(() => {
+    if (useAI && prompt && !aiImageUrl) {
+      setLoading(true);
+      designsAPI
+        .generateImage(prompt)
+        .then((response) => {
+          if (response.image_urls && response.image_urls.length > 0) {
+            setAiImageUrl(response.image_urls[0]);
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to generate AI image:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [useAI, prompt, aiImageUrl]);
+
+  // If using AI and image is loaded, show the image
+  if (useAI && aiImageUrl) {
+    return (
+      <img
+        ref={ref}
+        src={aiImageUrl}
+        alt="AI Generated Dress"
+        style={{ width: "500px", height: "700px", objectFit: "cover" }}
+        role="img"
+        aria-label="AI Generated Dress preview"
+      />
+    );
+  }
+
+  // If loading AI image, show loading state
+  if (useAI && loading) {
+    return (
+      <div
+        ref={ref}
+        style={{
+          width: "500px",
+          height: "700px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#f0f0f0",
+          border: "2px dashed #ccc",
+        }}
+        role="img"
+        aria-label="Generating AI dress preview"
+      >
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "24px", marginBottom: "10px" }}>🤖</div>
+          <div>Generating AI Image...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Default SVG generation
   // Derived values
   const skirtWidth = 140 + (skirtVolume / 100) * 140; // 140..280
   const train = (trainLength / 100) * 120; // 0..120

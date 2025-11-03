@@ -2,45 +2,67 @@ import React, { forwardRef } from "react";
 import { DressSVG } from "../utils/dressGenerator.jsx";
 
 const Preview = forwardRef(function Preview(
-  { params, isGenerating, onExportSvg, onExportPng },
+  { params, isGenerating, onExportSvg, onExportPng, useAI },
   ref
 ) {
   return (
     <div
-      className="rounded-xl border p-4 bg-gradient-to-br from-[rgba(124,92,255,0.1)] to-[rgba(59,232,208,0.1)] backdrop-blur-lg shadow-lg"
-      style={{ border: "1px solid rgba(15,23,42,0.04)" }}
+      className="rounded-xl border p-4 backdrop-blur-lg shadow-lg"
+      style={{
+        border: "1px solid rgba(255,255,255,0.3)",
+        background:
+          "linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2))",
+        color: "#001a33",
+      }}
     >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <h2 className="text-sm font-medium uppercase tracking-wider text-[#3be8d0]">
+        <h2 className="text-sm font-medium uppercase tracking-wider text-[#0066cc]">
           Preview
         </h2>
         <div className="flex gap-2">
           <button
             onClick={onExportSvg}
-            className="text-xs px-3 py-1.5 rounded-lg border border-[rgba(124,92,255,0.3)] text-[#e6f7ff] hover:bg-gradient-to-r hover:from-[rgba(124,92,255,0.2)] hover:to-[rgba(59,232,208,0.2)] transition-all duration-200"
+            className="text-xs px-3 py-1.5 rounded-lg border transition-all duration-200"
+            style={{
+              border: "1px solid rgba(255,255,255,0.3)",
+              color: "#001a33",
+            }}
           >
             SVG
           </button>
           <button
             onClick={onExportPng}
-            className="text-xs px-3 py-1.5 rounded-lg border border-[rgba(124,92,255,0.3)] text-[#e6f7ff] hover:bg-gradient-to-r hover:from-[rgba(124,92,255,0.2)] hover:to-[rgba(59,232,208,0.2)] transition-all duration-200"
+            className="text-xs px-3 py-1.5 rounded-lg border transition-all duration-200"
+            style={{
+              border: "1px solid rgba(255,255,255,0.3)",
+              color: "#001a33",
+            }}
           >
             PNG
           </button>
         </div>
       </div>
 
-      <div className="mt-3 aspect-5/7 w-full rounded-lg bg-gradient-to-br from-[rgba(124,92,255,0.05)] to-[rgba(59,232,208,0.05)] grid place-items-center overflow-hidden border border-[rgba(124,92,255,0.2)]">
+      <div
+        className="mt-3 aspect-5/7 w-full rounded-lg grid place-items-center overflow-hidden border"
+        style={{
+          background: "rgba(255,255,255,0.5)",
+          border: "1px solid rgba(255,255,255,0.3)",
+        }}
+      >
         {isGenerating ? (
-          <div className="flex flex-col items-center text-sm text-[#3be8d0]">
-            <div className="h-8 w-8 rounded-full border-2 border-[#7c5cff] border-t-[#3be8d0] animate-spin" />
+          <div
+            className="flex flex-col items-center text-sm"
+            style={{ color: "#0066cc" }}
+          >
+            <div className="h-8 w-8 rounded-full border-2 border-[#0066cc] border-t-[#0099ff] animate-spin" />
             <span className="mt-2">Rendering…</span>
           </div>
         ) : (
-          <DressSVG ref={ref} params={params} />
+          <DressSVG ref={ref} params={params} useAI={useAI} />
         )}
       </div>
-      <p className="mt-3 text-xs text-[#b6bfd0]">
+      <p className="mt-3 text-xs" style={{ color: "#0066cc" }}>
         Tip: Save variants to compare styles side-by-side.
       </p>
     </div>
