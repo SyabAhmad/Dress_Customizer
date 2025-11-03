@@ -2,7 +2,7 @@ import React, { forwardRef } from "react";
 import { DressSVG } from "../utils/dressGenerator.jsx";
 
 const Preview = forwardRef(function Preview(
-  { params, isGenerating, onExportSvg, onExportPng },
+  { params, isGenerating, onExportSvg, onExportPng, useAI },
   ref
 ) {
   return (
@@ -59,7 +59,7 @@ const Preview = forwardRef(function Preview(
             <span className="mt-2">Rendering…</span>
           </div>
         ) : (
-          <DressSVG ref={ref} params={params} />
+          <DressSVG ref={ref} params={params} useAI={useAI} />
         )}
       </div>
       <p className="mt-3 text-xs" style={{ color: "#0066cc" }}>

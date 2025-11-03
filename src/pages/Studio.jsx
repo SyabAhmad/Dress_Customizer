@@ -18,16 +18,24 @@ export default function Studio() {
     texture: "satin",
     textureIntensity: 40,
     skirtVolume: 60,
+    prompt: "",
   });
   const [variants, setVariants] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [useAI, setUseAI] = useState(false);
   const previewRef = useRef(null);
 
   const onGenerate = async () => {
     setIsGenerating(true);
-    const updated = parsePromptToParams(prompt, params);
-    await new Promise((r) => setTimeout(r, 500));
-    setParams(updated);
+    if (useAI) {
+      // AI generation - no need to parse prompt, just use the prompt directly
+      await new Promise((r) => setTimeout(r, 1000)); // Simulate some delay
+    } else {
+      // SVG generation - parse prompt to params
+      const updated = parsePromptToParams(prompt, params);
+      setParams(updated);
+      await new Promise((r) => setTimeout(r, 500));
+    }
     setIsGenerating(false);
   };
 
@@ -135,13 +143,18 @@ export default function Studio() {
                   setParams={setParams}
                   onSaveVariant={addVariant}
                   isGenerating={isGenerating}
-                />
-                <PromptBar
-                  prompt={prompt}
-                  onChange={setPrompt}
+                  useAI={useAI}
+                  setUseAI={setUseAI}
                   onGenerate={onGenerate}
-                  isGenerating={isGenerating}
                 />
+                {!useAI && (
+                  <PromptBar
+                    prompt={prompt}
+                    onChange={setPrompt}
+                    onGenerate={onGenerate}
+                    isGenerating={isGenerating}
+                  />
+                )}
               </section>
 
               {/* Right column: big preview */}
@@ -152,6 +165,7 @@ export default function Studio() {
                   isGenerating={isGenerating}
                   onExportSvg={exportSvg}
                   onExportPng={exportPng}
+                  useAI={useAI}
                 />
               </section>
             </div>

@@ -98,6 +98,35 @@ export const gownDesignsAPI = {
     }),
 };
 
+export const designsAPI = {
+  getAll: () => apiRequest("/designs"),
+
+  create: (designData) =>
+    apiRequest("/designs", {
+      method: "POST",
+      body: JSON.stringify(designData),
+    }),
+
+  getById: (id) => apiRequest(`/designs/${id}`),
+
+  update: (id, designData) =>
+    apiRequest(`/designs/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(designData),
+    }),
+
+  delete: (id) =>
+    apiRequest(`/designs/${id}`, {
+      method: "DELETE",
+    }),
+
+  generateImage: (prompt) =>
+    apiRequest("/designs/generate-image", {
+      method: "POST",
+      body: JSON.stringify({ prompt }),
+    }),
+};
+
 export const bodyProfilesAPI = {
   getAll: () => apiRequest("/body-profiles"),
 

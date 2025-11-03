@@ -152,3 +152,50 @@ class ChatMessage(db.Model):
             'content': self.content,
             'created_at': self.created_at.isoformat()
         }
+
+
+class Design(db.Model):
+    """Design model for storing AI-generated dress designs."""
+    __tablename__ = 'designs'
+    
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = db.Column(db.String(36), db.ForeignKey('accounts.id'), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    prompt = db.Column(db.Text, nullable=True)
+    
+    # Design parameters
+    color = db.Column(db.String(7), nullable=False, default='#EC4899')
+    pattern = db.Column(db.String(50), nullable=False, default='solid')
+    sleeve_length = db.Column(db.Float, nullable=False, default=70)
+    neckline = db.Column(db.String(50), nullable=False, default='v-neck')
+    train_length = db.Column(db.Float, nullable=False, default=50)
+    texture = db.Column(db.String(50), nullable=False, default='satin')
+    texture_intensity = db.Column(db.Float, nullable=False, default=40)
+    skirt_volume = db.Column(db.Float, nullable=False, default=60)
+    
+    # Image data
+    svg = db.Column(db.Text, nullable=True)
+    thumbnail = db.Column(db.LargeBinary, nullable=True)
+    image_url = db.Column(db.String(512), nullable=True)
+    
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'name': self.name,
+            'prompt': self.prompt,
+            'color': self.color,
+            'pattern': self.pattern,
+            'sleeve_length': self.sleeve_length,
+            'neckline': self.neckline,
+            'train_length': self.train_length,
+            'texture': self.texture,
+            'texture_intensity': self.texture_intensity,
+            'skirt_volume': self.skirt_volume,
+            'image_url': self.image_url,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat()
+        }

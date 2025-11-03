@@ -1,7 +1,7 @@
 """
 Flask application factory and configuration.
 """
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -36,8 +36,15 @@ def create_app(config_name='development'):
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'your-secret-key-change-in-production')
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
     
-    # Enable CORS
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    # Enable CORS with proper configuration
+    cors_config = {
+        "origins": ["http://localhost:5173", "http://localhost:3000", "http://localhost:5000"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True,
+        "max_age": 3600
+    }
+    CORS(app, resources={r"/api/*": cors_config})
     
     # Initialize extensions with app
     db.init_app(app)
@@ -49,11 +56,13 @@ def create_app(config_name='development'):
     from app.routes.accounts import accounts_bp
     from app.routes.gown_designs import gown_designs_bp
     from app.routes.body_profiles import body_profiles_bp
+    from app.routes.designs import designs_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(accounts_bp, url_prefix='/api/accounts')
     app.register_blueprint(gown_designs_bp, url_prefix='/api/gown-designs')
     app.register_blueprint(body_profiles_bp, url_prefix='/api/body-profiles')
+    app.register_blueprint(designs_bp, url_prefix='/api/designs')
     
     # Health check endpoint
     @app.route('/api/health', methods=['GET'])
