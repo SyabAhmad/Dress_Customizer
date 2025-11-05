@@ -143,4 +143,57 @@ export const bodyProfilesAPI = {
     }),
 };
 
+export const profilesAPI = {
+  // Get current user's complete profile
+  getCurrent: () => apiRequest("/profiles/me"),
+
+  // Get specific user's profile (by ID)
+  getById: (accountId) => apiRequest(`/profiles/${accountId}`),
+
+  // Update current user's profile
+  updateCurrent: (profileData) =>
+    apiRequest("/profiles/me", {
+      method: "PUT",
+      body: JSON.stringify(profileData),
+    }),
+
+  // Update specific user's profile
+  updateById: (accountId, profileData) =>
+    apiRequest(`/profiles/${accountId}`, {
+      method: "PUT",
+      body: JSON.stringify(profileData),
+    }),
+
+  // Delete current user's profile and account
+  deleteCurrent: () =>
+    apiRequest("/profiles/me", {
+      method: "DELETE",
+    }),
+
+  // Delete specific user's profile
+  deleteById: (accountId) =>
+    apiRequest(`/profiles/${accountId}`, {
+      method: "DELETE",
+    }),
+
+  // Body profile specific operations
+  bodyProfile: {
+    // Get current user's body profile
+    getCurrent: () => apiRequest("/profiles/me/body"),
+
+    // Update current user's body profile
+    updateCurrent: (bodyData) =>
+      apiRequest("/profiles/me/body", {
+        method: "PUT",
+        body: JSON.stringify(bodyData),
+      }),
+
+    // Reset body profile to defaults
+    reset: () =>
+      apiRequest("/profiles/me/body", {
+        method: "DELETE",
+      }),
+  },
+};
+
 export default apiRequest;
