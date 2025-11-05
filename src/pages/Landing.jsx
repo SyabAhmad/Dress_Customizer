@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import Header from "../components/Header.jsx";
+import Footer from "../components/Footer.jsx";
 import { DressSVG } from "../utils/dressGenerator.jsx";
-import girlPicture from "../assets/girlpicture.png";
+import image1 from "../assets/1.jpg";
+import image2 from "../assets/2.jpg";
+import image3 from "../assets/3.jpg";
 
 function AiIcon(props) {
   return (
@@ -14,55 +17,13 @@ function AiIcon(props) {
 }
 
 export default function Landing() {
-  const samples = [
-    {
-      name: "Blush Lace Gown",
-      params: {
-        color: "currentColor",
-        pattern: "lace",
-        sleeveLength: 80,
-        neckline: "v-neck",
-        trainLength: 80,
-        texture: "satin",
-        textureIntensity: 50,
-        skirtVolume: 75,
-      },
-    },
-    {
-      name: "Emerald Velvet",
-      params: {
-        color: "currentColor",
-        pattern: "solid",
-        sleeveLength: 30,
-        neckline: "off-shoulder",
-        trainLength: 40,
-        texture: "velvet",
-        textureIntensity: 55,
-        skirtVolume: 60,
-      },
-    },
-    {
-      name: "Minimal Silk",
-      params: {
-        color: "currentColor",
-        pattern: "solid",
-        sleeveLength: 0,
-        neckline: "halter",
-        trainLength: 10,
-        texture: "silk",
-        textureIntensity: 30,
-        skirtVolume: 35,
-      },
-    },
-  ];
-
   return (
     <div
       className="min-h-screen"
       style={{
         background:
-          "linear-gradient(180deg,#0b0f21 0%,#2b0b4f 45%,#3a0f6a 100%)",
-        color: "#e6f7ff",
+          "linear-gradient(180deg, #87CEEB 0%, #87CEEB 30%, #ADD8E6 70%, #E0F6FF 100%)",
+        color: "#001a33",
       }}
     >
       <Header />
@@ -75,20 +36,20 @@ export default function Landing() {
               <div
                 className="inline-flex items-center gap-2 text-xs font-medium rounded-full px-3 py-1"
                 style={{
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.04)",
-                  color: "#e6f7ff",
+                  background: "rgba(255,255,255,0.5)",
+                  border: "1px solid rgba(255,255,255,0.6)",
+                  color: "#0066cc",
                 }}
               >
                 <AiIcon className="w-4 h-4" /> New • AI Dress Customizer
               </div>
               <h1
                 className="mt-3 text-4xl/tight sm:text-5xl/tight font-semibold tracking-tight font-['Playfair_Display']"
-                style={{ color: "#37e6ff" }}
+                style={{ color: "#0066cc" }}
               >
                 Turn ideas into elegant fashion mock‑ups in seconds
               </h1>
-              <p className="mt-4 text-lg" style={{ color: "#b6bfd0" }}>
+              <p className="mt-4 text-lg" style={{ color: "#001a33" }}>
                 Describe the color, pattern, sleeves, neckline and fabric. Get a
                 refined, editable vector preview you can tweak and export.
               </p>
@@ -98,8 +59,8 @@ export default function Landing() {
                   className="inline-flex items-center gap-2 rounded-full px-5 py-3 font-medium shadow"
                   style={{
                     background:
-                      "linear-gradient(90deg,#7c5cff 0%,#3be8d0 100%)",
-                    color: "#021018",
+                      "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)",
+                    color: "#ffffff",
                   }}
                 >
                   Launch Studio <ArrowRight className="w-4 h-4" />
@@ -108,9 +69,9 @@ export default function Landing() {
                   href="#features"
                   className="inline-flex items-center gap-2 rounded-lg px-5 py-3 border"
                   style={{
-                    color: "black",
-                    borderColor: "rgba(15,23,42,0.04)",
-                    background: "#ffffff",
+                    color: "#001a33",
+                    borderColor: "rgba(255,255,255,0.6)",
+                    background: "rgba(255,255,255,0.7)",
                     backdropFilter: "blur(6px)",
                   }}
                 >
@@ -127,25 +88,25 @@ export default function Landing() {
             </div>
             <div className="lg:col-span-3">
               <div
-                className="rounded-2xl p-px shadow-sm"
+                className="rounded-2xl p-px shadow-lg"
                 style={{
-                  background: "linear-gradient(135deg,#7c5cff,#ffd1e6)",
+                  background:
+                    "linear-gradient(135deg,rgba(0,153,255,0.5),rgba(135,206,235,0.5))",
                 }}
               >
                 <div
                   className="rounded-2xl border p-3"
                   style={{
-                    borderColor: "rgba(15,23,42,0.04)",
-                    background:
-                      "linear-gradient(90deg,#7c5cff 0%,#3be8d0 100%)",
-                    backdropFilter: "blur(6px)",
+                    borderColor: "rgba(255,255,255,0.6)",
+                    background: "rgba(255,255,255,0.6)",
+                    backdropFilter: "blur(10px)",
                   }}
                 >
-                  <div className="aspect-5/7 w-full rounded-lg overflow-hidden">
+                  <div className="aspect-5/7 w-full rounded-lg overflow-hidden shadow-md">
                     <img
-                      src={girlPicture}
+                      src={image1}
                       alt="Elegant dress inspiration"
-                      className="w-full object-cover"
+                      className="w-full h-full object-cover"
                       loading="eager"
                     />
                   </div>
@@ -159,11 +120,11 @@ export default function Landing() {
         <section id="features" className="py-12 lg:py-16">
           <h2
             className="text-2xl font-semibold font-['Playfair_Display']"
-            style={{ color: "#cbb7ff" }}
+            style={{ color: "#0066cc" }}
           >
             Crafted for fashion creatives
           </h2>
-          <p className="mt-2" style={{ color: "#b9ffca" }}>
+          <p className="mt-2" style={{ color: "#001a33" }}>
             Everything you need to ideate, iterate and share.
           </p>
           <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -208,7 +169,10 @@ export default function Landing() {
 
         {/* How it works */}
         <section className="py-12 lg:py-16">
-          <h2 className="text-2xl font-semibold font-['Playfair_Display']">
+          <h2
+            className="text-2xl font-semibold font-['Playfair_Display']"
+            style={{ color: "#0066cc" }}
+          >
             How it works
           </h2>
           <ol className="mt-6 grid md:grid-cols-3 gap-5">
@@ -228,135 +192,121 @@ export default function Landing() {
 
         {/* Gallery */}
         <section className="py-12 lg:py-16">
-          <h2 className="text-2xl font-semibold font-['Playfair_Display']">
+          <h2
+            className="text-2xl font-semibold font-['Playfair_Display']"
+            style={{ color: "#0066cc" }}
+          >
             Inspiration gallery
           </h2>
           <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {samples.map((s) => (
+            {/* Image 1 */}
+            <div
+              className="group rounded-2xl p-px shadow-lg overflow-hidden hover:shadow-2xl transition-all"
+              style={{
+                background:
+                  "linear-gradient(135deg,rgba(0,153,255,0.5),rgba(135,206,235,0.5))",
+              }}
+            >
               <div
-                key={s.name}
-                className="group rounded-2xl p-px shadow-sm transition-shadow"
+                className="rounded-2xl border p-2"
                 style={{
-                  background: "linear-gradient(135deg,#ffd6a6,#7c5cff)",
+                  borderColor: "rgba(255,255,255,0.6)",
+                  background: "rgba(255,255,255,0.7)",
                 }}
               >
+                <div className="aspect-5/7 w-full rounded-lg overflow-hidden">
+                  <img
+                    src={image1}
+                    alt="Elegant blue gown"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform"
+                  />
+                </div>
                 <div
-                  className="rounded-2xl border p-3"
-                  style={{
-                    borderColor: "rgba(255,255,255,0.06)",
-                    background: "rgba(255,255,255,0.02)",
-                  }}
+                  className="mt-2 text-sm font-medium"
+                  style={{ color: "#0066cc" }}
                 >
-                  <div
-                    className="aspect-5/7 grid place-items-center rounded-lg overflow-hidden"
-                    style={{ color: "#3be8d0" }}
-                  >
-                    <DressSVG params={s.params} />
-                  </div>
-                  <div className="mt-2 text-sm" style={{ color: "#b6bfd0" }}>
-                    {s.name}
-                  </div>
+                  Elegant Evening Gown
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Image 2 */}
+            <div
+              className="group rounded-2xl p-px shadow-lg overflow-hidden hover:shadow-2xl transition-all"
+              style={{
+                background:
+                  "linear-gradient(135deg,rgba(0,153,255,0.4),rgba(173,216,230,0.4))",
+              }}
+            >
+              <div
+                className="rounded-2xl border p-2"
+                style={{
+                  borderColor: "rgba(255,255,255,0.6)",
+                  background: "rgba(255,255,255,0.7)",
+                }}
+              >
+                <div className="aspect-5/7 w-full rounded-lg overflow-hidden">
+                  <img
+                    src={image2}
+                    alt="Modern dress design"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform"
+                  />
+                </div>
+                <div
+                  className="mt-2 text-sm font-medium"
+                  style={{ color: "#0066cc" }}
+                >
+                  Modern Silhouette
+                </div>
+              </div>
+            </div>
+
+            {/* Image 3 */}
+            <div
+              className="group rounded-2xl p-px shadow-lg overflow-hidden hover:shadow-2xl transition-all"
+              style={{
+                background:
+                  "linear-gradient(135deg,rgba(0,153,255,0.3),rgba(224,246,255,0.3))",
+              }}
+            >
+              <div
+                className="rounded-2xl border p-2"
+                style={{
+                  borderColor: "rgba(255,255,255,0.6)",
+                  background: "rgba(255,255,255,0.7)",
+                }}
+              >
+                <div className="aspect-5/7 w-full rounded-lg overflow-hidden">
+                  <img
+                    src={image3}
+                    alt="Trendy fashion look"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform"
+                  />
+                </div>
+                <div
+                  className="mt-2 text-sm font-medium"
+                  style={{ color: "#0066cc" }}
+                >
+                  Trendy Fashion
+                </div>
+              </div>
+            </div>
           </div>
           <div className="mt-8">
             <Link
               to="/studio"
               className="inline-flex items-center gap-2 rounded-lg px-5 py-3 font-medium shadow"
               style={{
-                background: "linear-gradient(90deg,#7c5cff 0%,#3be8d0 100%)",
-                color: "#021018",
+                background: "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)",
+                color: "#ffffff",
               }}
             >
               Start designing now <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </section>
-
-        {/* Footer */}
-        <footer className="py-12 text-sm text-[#BDBDBD] border-t border-[#31363F]">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-linear-to-br from-[#76ABAE] to-[#31363F]" />
-                <span className="font-semibold text-[#EEEEEE]">
-                  Dress Customizer
-                </span>
-              </div>
-              <p className="mt-3 text-[#BDBDBD]">
-                Fast, private, and elegant mock‑ups for fashion ideas—right in
-                your browser.
-              </p>
-            </div>
-            <div>
-              <div className="text-[#EEEEEE] font-medium">Product</div>
-              <ul className="mt-3 space-y-2">
-                <li>
-                  <Link to="/studio" className="hover:text-[#EEEEEE]">
-                    Studio
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/recent-chats" className="hover:text-[#EEEEEE]">
-                    Recent chats
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/settings" className="hover:text-[#EEEEEE]">
-                    Settings
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <div className="text-[#EEEEEE] font-medium">Account</div>
-              <ul className="mt-3 space-y-2">
-                <li>
-                  <Link to="/signin" className="hover:text-[#EEEEEE]">
-                    Sign in
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/signup" className="hover:text-[#EEEEEE]">
-                    Sign up
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/profile" className="hover:text-[#EEEEEE]">
-                    Profile
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <div className="text-[#EEEEEE] font-medium">Connect</div>
-              <ul className="mt-3 space-y-2">
-                <li>
-                  <a
-                    href="https://github.com/Mahboobiqbal/Dress_Customizer"
-                    target="_blank"
-                    className="inline-flex items-center gap-2 hover:text-[#EEEEEE]"
-                  >
-                    <GitHubIcon className="w-4 h-4" /> GitHub
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-10 border-t border-[#31363F] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div>© {new Date().getFullYear()} Dress Customizer</div>
-            <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-[#EEEEEE]">
-                Privacy
-              </a>
-              <a href="#" className="hover:text-[#EEEEEE]">
-                Terms
-              </a>
-            </div>
-          </div>
-        </footer>
       </main>
+      <Footer />
     </div>
   );
 }
@@ -364,19 +314,19 @@ export default function Landing() {
 function FeatureCard({ title, desc, children }) {
   return (
     <div
-      className="rounded-xl p-4"
+      className="rounded-xl p-4 hover:shadow-lg transition-all"
       style={{
-        background: "#ffffff",
-        color: "#0b1220",
-        border: "1px solid rgba(15,23,42,0.04)",
-        boxShadow: "0 8px 20px rgba(2,6,23,0.06)",
+        background: "rgba(255,255,255,0.8)",
+        color: "#001a33",
+        border: "1px solid rgba(255,255,255,0.6)",
+        boxShadow: "0 4px 15px rgba(0,102,204,0.1)",
       }}
     >
-      <div className="flex items-center gap-2" style={{ color: "#0b1220" }}>
+      <div className="flex items-center gap-2" style={{ color: "#0066cc" }}>
         {children}
         <span className="font-medium">{title}</span>
       </div>
-      <p className="mt-2 text-sm" style={{ color: "#6b7280" }}>
+      <p className="mt-2 text-sm" style={{ color: "#001a33" }}>
         {desc}
       </p>
     </div>
@@ -386,30 +336,30 @@ function FeatureCard({ title, desc, children }) {
 function Step({ n, title, children }) {
   return (
     <li
-      className="rounded-xl p-4"
+      className="rounded-xl p-4 hover:shadow-lg transition-all"
       style={{
-        background: "#ffffff",
-        color: "#0b1220",
-        border: "1px solid rgba(15,23,42,0.04)",
-        boxShadow: "0 8px 20px rgba(2,6,23,0.06)",
+        background: "rgba(255,255,255,0.8)",
+        color: "#001a33",
+        border: "1px solid rgba(255,255,255,0.6)",
+        boxShadow: "0 4px 15px rgba(0,102,204,0.1)",
       }}
     >
       <div
         className="text-xs flex items-center gap-2"
-        style={{ color: "#6b7280" }}
+        style={{ color: "#0066cc" }}
       >
         <span
-          className="inline-flex h-5 w-5 items-center justify-center rounded-full font-medium"
-          style={{ backgroundColor: "#ffd6a6", opacity: 0.9, color: "#0b1220" }}
+          className="inline-flex h-5 w-5 items-center justify-center rounded-full font-medium text-white"
+          style={{ backgroundColor: "#0099ff" }}
         >
           {n}
         </span>
-        <span style={{ color: "#6b7280" }}>Step {n}</span>
+        <span style={{ color: "#0066cc" }}>Step {n}</span>
       </div>
-      <div className="mt-1 font-medium" style={{ color: "#0b1220" }}>
+      <div className="mt-1 font-medium" style={{ color: "#001a33" }}>
         {title}
       </div>
-      <p className="mt-1 text-sm" style={{ color: "#6b7280" }}>
+      <p className="mt-1 text-sm" style={{ color: "#001a33" }}>
         {children}
       </p>
     </li>
@@ -511,14 +461,6 @@ function Star(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
       <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27Z" />
-    </svg>
-  );
-}
-
-function GitHubIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-      <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.19-3.37-1.19-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.61.07-.61 1 .07 1.53 1.04 1.53 1.04.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 6.84c.85 0 1.7.11 2.5.32 1.9-1.29 2.74-1.02 2.74-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.86v2.76c0 .26.18.57.69.48A10 10 0 0 0 12 2Z" />
     </svg>
   );
 }
