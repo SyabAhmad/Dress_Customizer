@@ -5,6 +5,7 @@ import { DressSVG } from "../utils/dressGenerator.jsx";
 import image1 from "../assets/1.jpg";
 import image2 from "../assets/2.jpg";
 import image3 from "../assets/3.jpg";
+import image5 from "../assets/5.jpg";
 
 function AiIcon(props) {
   return (
@@ -104,9 +105,9 @@ export default function Landing() {
                 >
                   <div className="aspect-5/7 w-full rounded-lg overflow-hidden shadow-md">
                     <img
-                      src={image1}
+                      src={image5}
                       alt="Elegant dress inspiration"
-                      className="w-full h-full object-cover"
+                      className=" w-full h-full object-cover"
                       loading="eager"
                     />
                   </div>
@@ -218,7 +219,7 @@ export default function Landing() {
                   <img
                     src={image1}
                     alt="Elegant blue gown"
-                    className="w-full h-full object-cover hover:scale-105 transition-transform"
+                    className=" object-fit hover:scale-105 transition-transform"
                   />
                 </div>
                 <div
@@ -249,7 +250,7 @@ export default function Landing() {
                   <img
                     src={image2}
                     alt="Modern dress design"
-                    className="w-full h-full object-cover hover:scale-105 transition-transform"
+                    className="object-cover hover:scale-105 transition-transform"
                   />
                 </div>
                 <div
@@ -280,7 +281,7 @@ export default function Landing() {
                   <img
                     src={image3}
                     alt="Trendy fashion look"
-                    className="w-full h-full object-cover hover:scale-105 transition-transform"
+                    className="object-cover hover:scale-105 transition-transform"
                   />
                 </div>
                 <div
