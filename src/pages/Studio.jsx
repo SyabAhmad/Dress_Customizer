@@ -6,6 +6,8 @@ import CustomizerPanel from "../components/CustomizerPanel.jsx";
 import Preview from "../components/Preview.jsx";
 import VariantsTray from "../components/VariantsTray.jsx";
 import { parsePromptToParams } from "../utils/promptParser.js";
+import { gownDesignsAPI } from "../utils/api.js";
+import toast from "react-hot-toast";
 
 export default function Studio() {
   const [prompt, setPrompt] = useState("");
@@ -42,18 +44,46 @@ export default function Studio() {
   const addVariant = async () => {
     const el = previewRef.current;
     if (!el) return;
-    const svg = el.outerHTML;
-    const name = prompt?.trim() || "Design";
-    const thumb = await svgToPngDataUrl(svg, 200, 280);
-    const newVar = {
-      id: crypto.randomUUID(),
-      name,
-      timestamp: Date.now(),
-      svg,
-      params,
-      thumb,
-    };
-    setVariants((v) => [newVar, ...v].slice(0, 12));
+
+    try {
+      const svg = el.outerHTML;
+      const name = prompt?.trim() || "Design";
+      const thumb = await svgToPngDataUrl(svg, 200, 280);
+      
+      // Prepare design data for backend
+      const designData = {
+        name,
+        prompt: prompt || "",
+        color: params.color,
+        pattern: params.pattern,
+        sleeve_length: params.sleeveLength,
+        neckline: params.neckline,
+        train_length: params.trainLength,
+        texture: params.texture,
+        texture_intensity: params.textureIntensity,
+        skirt_volume: params.skirtVolume,
+        svg,
+        thumbnail: thumb,
+      };
+
+      // Save to backend
+      const result = await gownDesignsAPI.create(designData);
+      
+      const newVar = {
+        id: result.design.id,
+        name,
+        timestamp: Date.now(),
+        svg,
+        params,
+        thumb,
+      };
+      
+      setVariants((v) => [newVar, ...v].slice(0, 12));
+      toast.success(`Design "${name}" saved to your library!`);
+    } catch (error) {
+      console.error("Failed to save design:", error);
+      toast.error("Failed to save design. Please try again.");
+    }
   };
 
   const loadVariant = (v) => {
