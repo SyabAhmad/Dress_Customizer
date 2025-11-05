@@ -51,6 +51,7 @@ class BodyProfile(db.Model):
     width = db.Column(db.Float, nullable=False, default=100)
     build = db.Column(db.Float, nullable=False, default=0)
     head = db.Column(db.Float, nullable=False, default=100)
+    measurement_unit = db.Column(db.String(20), nullable=False, default='cm')  # 'cm' or 'inches'
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
     
@@ -62,6 +63,7 @@ class BodyProfile(db.Model):
             'width': self.width,
             'build': self.build,
             'head': self.head,
+            'measurement_unit': self.measurement_unit,
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat()
         }

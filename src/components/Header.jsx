@@ -1,38 +1,56 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext.jsx";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("user-name");
+    setMenuOpen(false);
+    navigate("/");
+  };
 
   return (
     <header
-      className="sticky top-0 z-30"
+      className="sticky top-0 z-30 border-b"
       style={{
-        background: "rgba(255,255,255,0.96)",
-        backdropFilter: "saturate(140%) blur(6px)",
-        borderBottom: "1px solid rgba(15,23,42,0.06)",
-        color: "#0b0b12",
+        background:
+          "linear-gradient(180deg, rgba(135,206,235,0.95), rgba(173,216,230,0.9))",
+        backdropFilter: "saturate(140%) blur(10px)",
+        borderBottom: "1px solid rgba(255,255,255,0.3)",
+        color: "#001a33",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-3">
             <div
-              className="w-8 h-8 rounded-lg"
+              className="w-8 h-8 rounded-lg shadow-md"
               style={{
-                background: "linear-gradient(135deg,#7c5cff 0%,#3be8d0 100%)",
-                boxShadow: "0 6px 18px rgba(124,92,255,0.12)",
-                border: "1px solid rgba(0,0,0,0.06)",
+                background: "linear-gradient(135deg,#0066cc 0%,#0099ff 100%)",
+                boxShadow: "0 6px 18px rgba(0,102,204,0.2)",
+                border: "1px solid rgba(255,255,255,0.4)",
               }}
             />
             <span
               className="font-semibold text-lg tracking-tight"
-              style={{ color: "#0b1220" }}
+              style={{ color: "#001a33" }}
             >
               Dress Customizer
             </span>
           </Link>
-          <span className="hidden sm:inline text-muted">· AI-powered UI</span>
+          <span
+            className="hidden sm:inline text-sm"
+            style={{ color: "#0066cc" }}
+          >
+            · AI-powered design
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -41,7 +59,10 @@ export default function Header() {
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
-            style={{ border: "1px solid rgba(15,23,42,0.06)" }}
+            style={{
+              border: "1px solid rgba(255,255,255,0.3)",
+              color: "#001a33",
+            }}
           >
             {menuOpen ? (
               <CloseIcon className="w-5 h-5" />
@@ -49,38 +70,79 @@ export default function Header() {
               <MenuIcon className="w-5 h-5" />
             )}
           </button>
-          <Link
-            to="/signin"
-            className="hidden md:inline px-3 py-1.5 rounded-md text-sm"
-            style={{
-              border: "1px solid rgba(15,23,42,0.06)",
-              color: "#0b1220",
-            }}
-          >
-            Sign in
-          </Link>
-          <Link
-            to="/signup"
-            className="hidden md:inline px-3 py-1.5 rounded-md text-sm"
-            style={{
-              background: "linear-gradient(90deg,#7c5cff 0%,#3be8d0 100%)",
-              color: "#ffffff",
-              boxShadow: "0 8px 28px rgba(124,92,255,0.12)",
-            }}
-          >
-            Sign up
-          </Link>
-          <Link
-            to="/studio"
-            className="hidden lg:inline px-3 py-1.5 rounded-full text-sm"
-            style={{
-              background: "linear-gradient(90deg,#7c5cff 0%,#3be8d0 100%)",
-              color: "#021018",
-              boxShadow: "0 8px 30px rgba(59,232,208,0.06)",
-            }}
-          >
-            Launch Studio
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link
+                to="/profile"
+                className="hidden md:inline px-3 py-1.5 rounded-md text-sm font-medium"
+                style={{
+                  border: "1px solid rgba(255,255,255,0.4)",
+                  color: "#001a33",
+                  background: "rgba(255,255,255,0.3)",
+                }}
+              >
+                Profile
+              </Link>
+              <Link
+                to="/studio"
+                className="hidden lg:inline px-3 py-1.5 rounded-full text-sm font-medium"
+                style={{
+                  background: "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)",
+                  color: "#ffffff",
+                  boxShadow: "0 8px 30px rgba(0,153,255,0.2)",
+                }}
+              >
+                Studio
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="hidden md:inline px-3 py-1.5 rounded-md text-sm font-medium hover:scale-105 transition-all duration-200"
+                style={{
+                  background: "rgba(220,38,38,0.5)",
+                  color: "#fff",
+                  boxShadow: "0 8px 28px rgba(0,102,204,0.2)",
+                }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/signin"
+                className="hidden md:inline px-3 py-1.5 rounded-md text-sm font-medium"
+                style={{
+                  border: "1px solid rgba(255,255,255,0.4)",
+                  color: "#001a33",
+                  background: "rgba(255,255,255,0.3)",
+                }}
+              >
+                Sign in
+              </Link>
+              <Link
+                to="/signup"
+                className="hidden md:inline px-3 py-1.5 rounded-md text-sm font-medium"
+                style={{
+                  background: "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)",
+                  color: "#ffffff",
+                  boxShadow: "0 8px 28px rgba(0,102,204,0.2)",
+                }}
+              >
+                Sign up
+              </Link>
+              <Link
+                to="/studio"
+                className="hidden lg:inline px-3 py-1.5 rounded-full text-sm font-medium"
+                style={{
+                  background: "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)",
+                  color: "#ffffff",
+                  boxShadow: "0 8px 30px rgba(0,153,255,0.2)",
+                }}
+              >
+                Launch Studio
+              </Link>
+            </>
+          )}
         </div>
       </div>
       {menuOpen && (
@@ -88,43 +150,87 @@ export default function Header() {
           <div
             className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-2"
             style={{
-              borderTop: "1px solid rgba(15,23,42,0.06)",
-              background: "rgba(255,255,255,0.98)",
+              borderTop: "1px solid rgba(255,255,255,0.3)",
+              background:
+                "linear-gradient(180deg, rgba(135,206,235,0.9), rgba(173,216,230,0.85))",
             }}
           >
-            <Link
-              to="/signin"
-              onClick={() => setMenuOpen(false)}
-              className="w-full text-left px-3 py-2 rounded-md"
-              style={{
-                border: "1px solid rgba(15,23,42,0.06)",
-                color: "#0b1220",
-              }}
-            >
-              Sign in
-            </Link>
-            <Link
-              to="/signup"
-              onClick={() => setMenuOpen(false)}
-              className="w-full text-left px-3 py-2 rounded-md"
-              style={{
-                background: "linear-gradient(90deg,#7c5cff 0%,#3be8d0 100%)",
-                color: "#fff",
-              }}
-            >
-              Sign up
-            </Link>
-            <Link
-              to="/studio"
-              onClick={() => setMenuOpen(false)}
-              className="w-full text-left px-3 py-2 rounded-md"
-              style={{
-                border: "1px solid rgba(15,23,42,0.06)",
-                color: "#0b1220",
-              }}
-            >
-              Launch Studio
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/profile"
+                  onClick={() => setMenuOpen(false)}
+                  className="w-full text-left px-3 py-2 rounded-md font-medium"
+                  style={{
+                    border: "1px solid rgba(255,255,255,0.3)",
+                    color: "#001a33",
+                  }}
+                >
+                  Profile
+                </Link>
+                <Link
+                  to="/studio"
+                  onClick={() => setMenuOpen(false)}
+                  className="w-full text-left px-3 py-2 rounded-md font-medium"
+                  style={{
+                    background:
+                      "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)",
+                    color: "#fff",
+                  }}
+                >
+                  Studio
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-3 py-2 rounded-md font-medium"
+                  style={{
+                    background:
+                      "linear-gradient(90deg,#dc2626 0%,#f87171 100%)",
+                    color: "#fff",
+                  }}
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/signin"
+                  onClick={() => setMenuOpen(false)}
+                  className="w-full text-left px-3 py-2 rounded-md font-medium"
+                  style={{
+                    border: "1px solid rgba(255,255,255,0.3)",
+                    color: "#001a33",
+                  }}
+                >
+                  Sign in
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={() => setMenuOpen(false)}
+                  className="w-full text-left px-3 py-2 rounded-md font-medium"
+                  style={{
+                    background:
+                      "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)",
+                    color: "#fff",
+                  }}
+                >
+                  Sign up
+                </Link>
+                <Link
+                  to="/studio"
+                  onClick={() => setMenuOpen(false)}
+                  className="w-full text-left px-3 py-2 rounded-md font-medium"
+                  style={{
+                    background:
+                      "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)",
+                    color: "#fff",
+                  }}
+                >
+                  Launch Studio
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       )}

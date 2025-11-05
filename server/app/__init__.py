@@ -54,12 +54,14 @@ def create_app(config_name='development'):
     # Register blueprints
     from app.routes.auth import auth_bp
     from app.routes.accounts import accounts_bp
+    from app.routes.profiles import profiles_bp
     from app.routes.gown_designs import gown_designs_bp
     from app.routes.body_profiles import body_profiles_bp
     from app.routes.designs import designs_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(accounts_bp, url_prefix='/api/accounts')
+    app.register_blueprint(profiles_bp)  # URL prefix already defined in blueprint
     app.register_blueprint(gown_designs_bp, url_prefix='/api/gown-designs')
     app.register_blueprint(body_profiles_bp, url_prefix='/api/body-profiles')
     app.register_blueprint(designs_bp, url_prefix='/api/designs')
