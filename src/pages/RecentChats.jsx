@@ -31,7 +31,7 @@ export default function RecentChats() {
     try {
       const response = await gownDesignsAPI.getAll();
       const designs = response.designs || [];
-      
+
       if (designs.length > 0) {
         setChats(designs);
       } else {
@@ -110,7 +110,8 @@ export default function RecentChats() {
                   <button
                     className="text-xs px-3 py-1.5 rounded-md font-medium transition-all hover:opacity-90"
                     style={{
-                      background: "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)",
+                      background:
+                        "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)",
                       color: "#ffffff",
                       boxShadow: "0 4px 12px rgba(0,102,204,0.2)",
                     }}

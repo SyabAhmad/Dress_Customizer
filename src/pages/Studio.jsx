@@ -49,7 +49,7 @@ export default function Studio() {
       const svg = el.outerHTML;
       const name = prompt?.trim() || "Design";
       const thumb = await svgToPngDataUrl(svg, 200, 280);
-      
+
       // Prepare design data for backend
       const designData = {
         name,
@@ -68,7 +68,7 @@ export default function Studio() {
 
       // Save to backend
       const result = await gownDesignsAPI.create(designData);
-      
+
       const newVar = {
         id: result.design.id,
         name,
@@ -77,7 +77,7 @@ export default function Studio() {
         params,
         thumb,
       };
-      
+
       setVariants((v) => [newVar, ...v].slice(0, 12));
       toast.success(`Design "${name}" saved to your library!`);
     } catch (error) {
