@@ -27,6 +27,7 @@ export default function Landing() {
         color: "#001a33",
       }}
     >
+      <Header />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Hero */}
         <section className="pt-14 pb-16 lg:pt-20 lg:pb-24 relative">
