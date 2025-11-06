@@ -18,16 +18,19 @@ export default function Header() {
 
   return (
     <header
-      className="sticky top-0 z-30 border-b"
+      className="sticky top-0 z-50 w-full"
       style={{
         background:
           "linear-gradient(180deg, rgba(135,206,235,0.95), rgba(173,216,230,0.9))",
         backdropFilter: "saturate(140%) blur(10px)",
         borderBottom: "1px solid rgba(255,255,255,0.3)",
         color: "#001a33",
+        paddingRight:
+          "48px" /* increased right margin so nav buttons (Logout) sit away from edge */,
+        paddingLeft: 0,
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div className="w-full px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link to="/" className="flex items-center gap-3">
             <div
@@ -36,6 +39,7 @@ export default function Header() {
                 background: "linear-gradient(135deg,#0066cc 0%,#0099ff 100%)",
                 boxShadow: "0 6px 18px rgba(0,102,204,0.2)",
                 border: "1px solid rgba(255,255,255,0.4)",
+                marginLeft: "16px" /* Adjusted margin for alignment */,
               }}
             />
             <span
@@ -72,7 +76,7 @@ export default function Header() {
           </button>
           {isAuthenticated ? (
             <>
-              <Link
+              {/* <Link
                 to="/profile"
                 className="hidden md:inline px-3 py-1.5 rounded-md text-sm font-medium"
                 style={{
@@ -93,7 +97,7 @@ export default function Header() {
                 }}
               >
                 Studio
-              </Link>
+              </Link> */}
               <button
                 onClick={handleLogout}
                 className="hidden md:inline px-3 py-1.5 rounded-md text-sm font-medium hover:scale-105 transition-all duration-200"
@@ -157,7 +161,7 @@ export default function Header() {
           >
             {isAuthenticated ? (
               <>
-                <Link
+                {/* <Link
                   to="/profile"
                   onClick={() => setMenuOpen(false)}
                   className="w-full text-left px-3 py-2 rounded-md font-medium"
@@ -179,7 +183,7 @@ export default function Header() {
                   }}
                 >
                   Studio
-                </Link>
+                </Link> */}
                 <button
                   onClick={handleLogout}
                   className="w-full text-left px-3 py-2 rounded-md font-medium"

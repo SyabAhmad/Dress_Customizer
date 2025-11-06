@@ -1,5 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext.jsx";
+import Header from "./Header.jsx";
+import Sidebar from "./Sidebar.jsx";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -22,8 +24,28 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/signin" state={{ from: location }} replace />;
   }
 
-  // Render the protected component
-  return children;
+  // Render the protected component inside global layout with header, sidebar and main content
+  return (
+    <div className="min-h-screen w-full flex flex-col">
+      {/* Header spans full width at top */}
+      <Header />
+
+      {/* Sidebar and main content below header */}
+      <div
+        className="flex flex-1 w-full"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(135,206,235,0.95), rgba(173,216,230,0.9))",
+        }}
+      >
+        {/* grid: aside + main */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 w-full">
+          <Sidebar />
+          <div className="lg:col-span-10">{children}</div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ProtectedRoute;

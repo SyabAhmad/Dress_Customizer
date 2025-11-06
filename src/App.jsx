@@ -6,6 +6,8 @@ import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Settings from "./pages/Settings.jsx";
 import RecentChats from "./pages/RecentChats.jsx";
+import Designs from "./pages/Designs.jsx";
+import DesignDetail from "./pages/DesignDetail.jsx";
 import Profile from "./pages/Profile.jsx";
 import ToastProvider from "./components/ToastProvider.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
@@ -48,6 +50,22 @@ export default function App() {
           element={
             <ProtectedRoute>
               <RecentChats />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/designs"
+          element={
+            <ProtectedRoute>
+              <Designs />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/designs/:id"
+          element={
+            <ProtectedRoute>
+              <DesignDetail />
             </ProtectedRoute>
           }
         />

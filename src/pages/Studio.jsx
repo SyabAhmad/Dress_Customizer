@@ -1,15 +1,15 @@
-import { useRef, useState } from "react";
-import Header from "../components/Header.jsx";
-import { Link } from "react-router-dom";
+import { useRef, useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import PromptBar from "../components/PromptBar.jsx";
 import CustomizerPanel from "../components/CustomizerPanel.jsx";
 import Preview from "../components/Preview.jsx";
 import VariantsTray from "../components/VariantsTray.jsx";
 import { parsePromptToParams } from "../utils/promptParser.js";
-import { gownDesignsAPI } from "../utils/api.js";
+import { gownDesignsAPI, aiAPI } from "../utils/api.js";
 import toast from "react-hot-toast";
 
 export default function Studio() {
+  const location = useLocation();
   const [prompt, setPrompt] = useState("");
   const [params, setParams] = useState({
     color: "#EC4899",
@@ -23,15 +23,84 @@ export default function Studio() {
     prompt: "",
   });
   const [variants, setVariants] = useState([]);
+  const [editingId, setEditingId] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [useAI, setUseAI] = useState(false);
   const previewRef = useRef(null);
 
+  // If navigated here with a design to edit, load its params
+  useEffect(() => {
+    const incoming = location?.state?.design;
+    if (incoming) {
+      // Map backend snake_case to frontend camelCase
+      setParams((p) => ({
+        ...p,
+        color: incoming.color || p.color,
+        pattern: incoming.pattern || p.pattern,
+        sleeveLength: incoming.sleeve_length ?? p.sleeveLength,
+        neckline: incoming.neckline || p.neckline,
+        trainLength: incoming.train_length ?? p.trainLength,
+        texture: incoming.texture || p.texture,
+        textureIntensity: incoming.texture_intensity ?? p.textureIntensity,
+        skirtVolume: incoming.skirt_volume ?? p.skirtVolume,
+      }));
+      setPrompt(incoming.name || "");
+      if (incoming.id) setEditingId(incoming.id);
+      // Remove state to avoid reloading repeatedly
+      try {
+        window.history.replaceState({}, document.title);
+      } catch (err) {
+        // ignore replaceState failures in some environments
+        console.debug("replaceState ignored:", err);
+      }
+    }
+  }, [location]);
+
   const onGenerate = async () => {
     setIsGenerating(true);
     if (useAI) {
-      // AI generation - no need to parse prompt, just use the prompt directly
-      await new Promise((r) => setTimeout(r, 1000)); // Simulate some delay
+      // AI image generation using Gemini API
+      try {
+        const response = await aiAPI.generateImage(prompt, {
+          color: params.color,
+          pattern: params.pattern,
+          neckline: params.neckline,
+          sleeve_length: params.sleeveLength,
+          train_length: params.trainLength,
+          texture: params.texture,
+          texture_intensity: params.textureIntensity,
+          skirt_volume: params.skirtVolume,
+        });
+
+        if (response.image) {
+          // Store the AI-generated image URL in a temporary state or add to variants
+          // For now, we'll create a variant with the AI image
+          const name = prompt?.trim() || "AI Generated Design";
+          setVariants((v) =>
+            [
+              {
+                id: crypto.randomUUID(),
+                name,
+                timestamp: Date.now(),
+                svg: null,
+                params,
+                thumb: response.image,
+                isAIGenerated: true,
+              },
+              ...v,
+            ].slice(0, 12)
+          );
+
+          toast.success("AI image generated!");
+        } else {
+          toast.error(response.error || "Image generation failed");
+        }
+      } catch (error) {
+        console.error("AI generation error:", error);
+        toast.error(
+          "AI generation failed: " + (error.message || "Unknown error")
+        );
+      }
     } else {
       // SVG generation - parse prompt to params
       const updated = parsePromptToParams(prompt, params);
@@ -66,8 +135,16 @@ export default function Studio() {
         thumbnail: thumb,
       };
 
-      // Save to backend
-      const result = await gownDesignsAPI.create(designData);
+      let result;
+      if (editingId) {
+        // Update existing design
+        result = await gownDesignsAPI.update(editingId, designData);
+        toast.success(`Design "${name}" updated`);
+      } else {
+        // Create new
+        result = await gownDesignsAPI.create(designData);
+        toast.success(`Design "${name}" saved to your library!`);
+      }
 
       const newVar = {
         id: result.design.id,
@@ -79,7 +156,8 @@ export default function Studio() {
       };
 
       setVariants((v) => [newVar, ...v].slice(0, 12));
-      toast.success(`Design "${name}" saved to your library!`);
+      // Clear editing state after update
+      if (editingId) setEditingId(null);
     } catch (error) {
       console.error("Failed to save design:", error);
       toast.error("Failed to save design. Please try again.");
@@ -124,43 +202,10 @@ export default function Studio() {
         color: "#001a33",
       }}
     >
-      <Header />
       <main className="mx-auto max-w-7xl px-4 pb-8">
         {/* Layout with sidebar on the left */}
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 lg:gap-6">
-          {/* Sidebar (large screens) */}
-          <aside className="hidden lg:block lg:col-span-2 lg:-ml-4">
-            <nav
-              className="sticky top-16 rounded-xl border h-[calc(100vh-4rem)] overflow-auto p-3 flex flex-col gap-2 shadow-sm"
-              style={{
-                border: "1px solid rgba(255,255,255,0.3)",
-                background:
-                  "linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2))",
-                backdropFilter: "blur(10px)",
-                color: "#001a33",
-              }}
-            >
-              <div className="px-2 pb-1 text-xs font-medium uppercase tracking-wider text-[#0066cc]">
-                Navigation
-              </div>
-              <SidebarItem
-                to="/settings"
-                className
-                icon={<SettingsIcon className="w-4 h-4" />}
-                label="Settings"
-              />
-              <SidebarItem
-                to="/recent-chats"
-                icon={<ChatIcon className="w-4 h-4" />}
-                label="Recent chats"
-              />
-              <SidebarItem
-                to="/profile"
-                icon={<UserIcon className="w-4 h-4" />}
-                label="Profile"
-              />
-            </nav>
-          </aside>
+          {/* Sidebar moved to global ProtectedRoute layout */}
 
           {/* Main content area */}
           <div className="lg:col-span-10">
