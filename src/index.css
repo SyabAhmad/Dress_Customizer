@@ -1,2 +1,13 @@
 @import "./styles/theme.css";
 @import "tailwindcss";
+
+/* Reset default body margin so header and aside can be flush to the viewport edges */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}

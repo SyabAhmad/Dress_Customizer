@@ -35,6 +35,7 @@ def create_app(config_name='development'):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'your-secret-key-change-in-production')
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
+    app.config['GOOGLE_API_KEY'] = os.getenv('GOOGLE_API_KEY', '')  # Set via environment variable
     
     # Enable CORS with proper configuration
     cors_config = {
@@ -58,6 +59,7 @@ def create_app(config_name='development'):
     from app.routes.gown_designs import gown_designs_bp
     from app.routes.body_profiles import body_profiles_bp
     from app.routes.designs import designs_bp
+    from app.routes.ai import ai_bp
     
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(accounts_bp, url_prefix='/api/accounts')
@@ -65,6 +67,7 @@ def create_app(config_name='development'):
     app.register_blueprint(gown_designs_bp, url_prefix='/api/gown-designs')
     app.register_blueprint(body_profiles_bp, url_prefix='/api/body-profiles')
     app.register_blueprint(designs_bp, url_prefix='/api/designs')
+    app.register_blueprint(ai_bp, url_prefix='/api/ai')
     
     # Health check endpoint
     @app.route('/api/health', methods=['GET'])

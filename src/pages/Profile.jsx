@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { profilesAPI } from "../utils/api";
 import toast from "react-hot-toast";
-import Header from "../components/Header.jsx";
 
 export default function Profile() {
   const { user, logout } = useAuth();
@@ -136,7 +135,7 @@ export default function Profile() {
           minHeight: "100vh",
         }}
       >
-        <Header />
+        {/* Header removed: now globally rendered in ProtectedRoute */}
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div
@@ -163,7 +162,7 @@ export default function Profile() {
         color: "#001a33",
       }}
     >
-      <Header />
+      {/* Header removed: now globally rendered in ProtectedRoute */}
       <main className="max-w-4xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="mb-8">

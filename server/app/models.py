@@ -95,8 +95,9 @@ class GownDesign(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    def to_dict(self):
-        return {
+    def to_dict(self, include_large_fields=False):
+        import base64
+        result = {
             'id': self.id,
             'account_id': self.account_id,
             'name': self.name,
@@ -112,6 +113,17 @@ class GownDesign(db.Model):
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat()
         }
+        
+        # Include large fields if requested (e.g., for detail views)
+        if include_large_fields:
+            result['svg'] = self.svg
+            # Convert binary thumbnail to base64 for JSON
+            if self.thumbnail:
+                result['thumbnail'] = f"data:image/png;base64,{base64.b64encode(self.thumbnail).decode('utf-8')}"
+            else:
+                result['thumbnail'] = None
+        
+        return result
 
 
 class Conversation(db.Model):

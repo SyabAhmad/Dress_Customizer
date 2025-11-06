@@ -1,10 +1,18 @@
 """
 Gown design routes: CRUD operations for dress designs.
 """
+import base64
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import db
 from app.models import GownDesign
+
+
+def decode_base64_thumbnail(thumbnail_str):
+    """Decode base64 thumbnail string to bytes."""
+    if thumbnail_str and thumbnail_str.startswith('data:image/png;base64,'):
+        return base64.b64decode(thumbnail_str.split(',')[1])
+    return None
 
 gown_designs_bp = Blueprint('gown_designs', __name__)
 
@@ -36,7 +44,8 @@ def get_design(design_id):
         if not design:
             return jsonify({'error': 'Design not found'}), 404
         
-        return jsonify(design.to_dict()), 200
+        # Include large fields (svg, thumbnail) for single design view
+        return jsonify(design.to_dict(include_large_fields=True)), 200
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -53,6 +62,11 @@ def create_design():
         if not data or not data.get('name'):
             return jsonify({'error': 'Missing required fields'}), 400
         
+        # Decode thumbnail if it's a base64 data URL
+        thumbnail_binary = None
+        if data.get('thumbnail'):
+            thumbnail_binary = decode_base64_thumbnail(data.get('thumbnail'))
+        
         design = GownDesign(
             account_id=account_id,
             name=data.get('name'),
@@ -66,7 +80,7 @@ def create_design():
             texture_intensity=float(data.get('texture_intensity', 40)),
             skirt_volume=float(data.get('skirt_volume', 60)),
             svg=data.get('svg'),
-            thumbnail=data.get('thumbnail')
+            thumbnail=thumbnail_binary
         )
         
         db.session.add(design)
@@ -119,7 +133,8 @@ def update_design(design_id):
         if 'svg' in data:
             design.svg = data['svg']
         if 'thumbnail' in data:
-            design.thumbnail = data['thumbnail']
+            # Decode thumbnail if it's a base64 data URL
+            design.thumbnail = decode_base64_thumbnail(data['thumbnail'])
         
         db.session.commit()
         

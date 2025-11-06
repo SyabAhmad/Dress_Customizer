@@ -196,4 +196,18 @@ export const profilesAPI = {
   },
 };
 
+export const aiAPI = {
+  generateImage: (prompt, params) =>
+    apiRequest("/ai/generate-image", {
+      method: "POST",
+      body: JSON.stringify({ prompt, params }),
+    }),
+
+  generateImageText: (prompt) =>
+    apiRequest("/ai/generate-image-text", {
+      method: "POST",
+      body: JSON.stringify({ prompt }),
+    }),
+};
+
 export default apiRequest;

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Header from "../components/Header.jsx";
 import { gownDesignsAPI } from "../utils/api.js";
 
 const fallbackChats = [
@@ -52,7 +51,6 @@ export default function RecentChats() {
           "linear-gradient(180deg, rgba(135,206,235,0.95), rgba(173,216,230,0.9))",
       }}
     >
-      <Header />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
         <h1
           className="text-3xl font-semibold font-['Playfair_Display']"

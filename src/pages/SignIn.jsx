@@ -90,7 +90,6 @@ export default function SignIn() {
           "linear-gradient(180deg, #87CEEB 0%, #87CEEB 30%, #ADD8E6 70%, #E0F6FF 100%)",
       }}
     >
-      <Header />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <section className="py-14 lg:py-20 grid place-items-center">
           <div className="w-full max-w-md">
