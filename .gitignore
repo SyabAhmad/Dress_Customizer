@@ -29,4 +29,5 @@ TODO.md
 .env
 __pycache__
 *.pyc
-
+migrations
+alembic.ini
