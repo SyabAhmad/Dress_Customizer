@@ -29,5 +29,5 @@ TODO.md
 .env
 __pycache__
 *.pyc
-
-TODO_plan.md
+migrations
+alembic.ini
