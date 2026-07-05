@@ -79,6 +79,7 @@ def create_design():
             texture=data.get('texture', 'satin'),
             texture_intensity=float(data.get('texture_intensity', 40)),
             skirt_volume=float(data.get('skirt_volume', 60)),
+            image_url=data.get('image_url'),
             svg=data.get('svg'),
             thumbnail=thumbnail_binary
         )

@@ -21,7 +21,6 @@ export default function Studio() {
     dressType: "frock",
   });
   const [savedStyles, setSavedStyles] = useState([]);
-  const [savedDesigns, setSavedDesigns] = useState([]);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
   const [slashFilter, setSlashFilter] = useState("");
   const [slashIndex, setSlashIndex] = useState(0);
@@ -31,6 +30,7 @@ export default function Studio() {
   const inputRef = useRef(null);
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef(null);
+  const [lastImageUrl, setLastImageUrl] = useState("");
   const chatEndRef = useRef(null);
 
   const saveCurrentStyle = () => {
@@ -54,6 +54,16 @@ export default function Studio() {
         texture_intensity: params.textureIntensity, skirt_volume: params.skirtVolume,
       });
       setSavedStyles((prev) => [res.style, ...prev]);
+      if (lastImageUrl) {
+        await gownDesignsAPI.create({
+          name, prompt: name,
+          color: params.color, pattern: params.pattern,
+          sleeve_length: params.sleeveLength, neckline: params.neckline,
+          train_length: params.trainLength, texture: params.texture,
+          texture_intensity: params.textureIntensity, skirt_volume: params.skirtVolume,
+          image_url: lastImageUrl,
+        });
+      }
       setShowSaveDialog(false);
       toast.success(`Style "${name}" saved!`);
     } catch {
@@ -94,7 +104,6 @@ export default function Studio() {
 
   useEffect(() => {
     stylesAPI.list().then((res) => setSavedStyles(res.styles || [])).catch(() => {});
-    gownDesignsAPI.getAll().then((res) => setSavedDesigns(res.designs || [])).catch(() => {});
 
     aiAPI.listModels().then((res) => {
       if (res.models?.length) {
@@ -125,6 +134,20 @@ export default function Studio() {
         textureIntensity: d.texture_intensity ?? p.textureIntensity, skirtVolume: d.skirt_volume ?? p.skirtVolume,
       }));
       setPrompt(d.name || "");
+      try { window.history.replaceState({}, document.title); } catch {}
+      return;
+    }
+
+    if (state?.style) {
+      const s = state.style;
+      setParams((p) => ({
+        ...p, color: s.color || p.color, pattern: s.pattern || p.pattern,
+        sleeveLength: s.sleeve_length ?? p.sleeveLength, neckline: s.neckline || p.neckline,
+        trainLength: s.train_length ?? p.trainLength, texture: s.texture || p.texture,
+        textureIntensity: s.texture_intensity ?? p.textureIntensity, skirtVolume: s.skirt_volume ?? p.skirtVolume,
+      }));
+      setPrompt(s.name ? `Style: ${s.name}` : "");
+      setShowCustomize(true);
       try { window.history.replaceState({}, document.title); } catch {}
       return;
     }
@@ -165,6 +188,7 @@ export default function Studio() {
         if (response.conversation_id && !conversationId) {
           setConversationId(response.conversation_id);
         }
+        setLastImageUrl(response.image);
         const aiMsg = {
           id: "msg-" + Date.now(), sender_role: "assistant",
           content: "Generated design", image_url: response.image,
@@ -485,22 +509,6 @@ export default function Studio() {
                   ))
                 )}
 
-                <div className="px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider border-t" style={{ color: "#0066cc", borderColor: "rgba(0,102,204,0.1)" }}>
-                  Recent Designs
-                </div>
-                {savedDesigns.length === 0 ? (
-                  <p className="px-3 py-2 text-xs text-center opacity-60">No designs yet. Generate in chat.</p>
-                ) : (
-                  savedDesigns.filter((d) => (d.name || "").toLowerCase().includes(slashFilter)).map((design, i) => (
-                    <button key={design.id} className="w-full flex items-center justify-between px-3 py-1.5 text-sm transition-colors text-left hover:bg-[#0066cc]/10" style={{ color: "#001a33" }} onClick={() => applyStyle(design)}>
-                      <span className="flex items-center gap-2 truncate">
-                        <span className="w-3 h-3 rounded-full border border-white/50 inline-block shrink-0" style={{ background: design.color || "#EC4899" }} />
-                        <span className="truncate">{design.name || "Untitled"}</span>
-                      </span>
-                      <span className="text-[10px] shrink-0 opacity-50" style={{ color: "#0066cc" }}>{new Date(design.created_at).toLocaleDateString()}</span>
-                    </button>
-                  ))
-                )}
               </div>
             )}
             <textarea

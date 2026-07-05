@@ -11,7 +11,7 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import db
-from app.models import Conversation, ChatMessage, GownDesign
+from app.models import Conversation, ChatMessage
 
 ai_bp = Blueprint('ai', __name__)
 
@@ -77,25 +77,6 @@ def add_chat_message(conversation_id, role, content, image_url=None):
     )
     db.session.add(msg)
     return msg
-
-
-def save_design_record(account_id, prompt, params, image_url):
-    design = GownDesign(
-        account_id=account_id,
-        name=prompt.strip() or "Untitled Design",
-        prompt=prompt,
-        color=params.get('color', '#EC4899'),
-        pattern=params.get('pattern', 'solid'),
-        sleeve_length=float(params.get('sleeve_length', 70)),
-        neckline=params.get('neckline', 'v-neck'),
-        train_length=float(params.get('train_length', 50)),
-        texture=params.get('texture', 'satin'),
-        texture_intensity=float(params.get('texture_intensity', 40)),
-        skirt_volume=float(params.get('skirt_volume', 60)),
-        image_url=image_url,
-    )
-    db.session.add(design)
-    return design
 
 
 def enhance_prompt_with_gemini(prompt_text, params):
@@ -197,9 +178,6 @@ def generate_image():
         add_chat_message(conv.id, 'user', prompt)
         add_chat_message(conv.id, 'assistant', 'Generated design', image_url=image_path)
         conv.updated_at = datetime.utcnow()
-
-        # Save design record
-        save_design_record(account_id, prompt, params, image_path)
 
         db.session.commit()
 

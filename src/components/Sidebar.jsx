@@ -32,7 +32,7 @@ export default function Sidebar() {
     { to: "/", icon: <HomeIcon className="w-4 h-4" />, label: "Home" },
     { to: "/studio", icon: "🎫", label: "Studio" },
     { to: "/recent-chats", icon: <ChatIcon className="w-4 h-4" />, label: "Recent Chats" },
-    { to: "/designs", icon: <DesignIcon className="w-4 h-4" />, label: "My Designs" },
+    { to: "/styles", icon: <DesignIcon className="w-4 h-4" />, label: "Styles" },
     { to: "/profile", icon: <UserIcon className="w-4 h-4" />, label: "Profile" },
     { to: "/settings", icon: <SettingsIcon className="w-4 h-4" />, label: "Settings" },
   ];
