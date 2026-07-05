@@ -28,6 +28,8 @@ export default function Studio() {
   const [saveName, setSaveName] = useState("");
   const [saveNameError, setSaveNameError] = useState("");
   const inputRef = useRef(null);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
   const chatEndRef = useRef(null);
 
   const saveCurrentStyle = () => {
@@ -184,6 +186,52 @@ export default function Studio() {
     setMessages([]);
     setConversationId(null);
     setPrompt("");
+  };
+
+  const toggleVoiceInput = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error("Voice input is not supported in your browser");
+      return;
+    }
+
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+      setIsListening(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+
+    recognition.onresult = (event) => {
+      let finalTranscript = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        }
+      }
+      if (finalTranscript) {
+        setPrompt((prev) => prev + (prev && !prev.endsWith(" ") ? " " : "") + finalTranscript);
+      }
+    };
+
+    recognition.onerror = () => {
+      setIsListening(false);
+      recognitionRef.current = null;
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+      recognitionRef.current = null;
+    };
+
+    recognition.start();
+    recognitionRef.current = recognition;
+    setIsListening(true);
   };
 
   const handleInputChange = (e) => {
@@ -469,6 +517,23 @@ export default function Studio() {
             />
           </div>
           <button
+            onClick={toggleVoiceInput}
+            className="rounded-lg p-2.5 transition-all duration-200 shrink-0"
+            style={{
+              background: isListening
+                ? "linear-gradient(135deg,#E11D48,#FB7185)"
+                : "rgba(255,255,255,0.5)",
+              color: isListening ? "#fff" : "#0066cc",
+              border: isListening
+                ? "2px solid #E11D48"
+                : "1px solid rgba(255,255,255,0.5)",
+              boxShadow: isListening ? "0 0 12px rgba(225,29,72,0.6)" : "none",
+            }}
+            title={isListening ? "Stop voice input" : "Start voice input"}
+          >
+            <MicIcon className={`w-4 h-4 ${isListening ? "animate-pulse" : ""}`} />
+          </button>
+          <button
             onClick={onGenerate}
             disabled={isGenerating || !prompt.trim()}
             className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 font-bold shadow-md transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shrink-0"
@@ -507,6 +572,17 @@ function Spinner(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props} className="animate-spin">
       <circle cx="12" cy="12" r="10" strokeWidth="2" fill="none" />
+    </svg>
+  );
+}
+
+function MicIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+      <line x1="12" y1="19" x2="12" y2="23" />
+      <line x1="8" y1="23" x2="16" y2="23" />
     </svg>
   );
 }
