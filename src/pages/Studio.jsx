@@ -210,14 +210,15 @@ export default function Studio() {
 
     recognition.onresult = (event) => {
       let finalTranscript = "";
-      for (let i = event.resultIndex; i < event.results.length; i++) {
+      let interimTranscript = "";
+      for (let i = 0; i < event.results.length; i++) {
         if (event.results[i].isFinal) {
           finalTranscript += event.results[i][0].transcript;
+        } else {
+          interimTranscript += event.results[i][0].transcript;
         }
       }
-      if (finalTranscript) {
-        setPrompt((prev) => prev + (prev && !prev.endsWith(" ") ? " " : "") + finalTranscript);
-      }
+      setPrompt(finalTranscript + (interimTranscript ? " " + interimTranscript : ""));
     };
 
     recognition.onerror = () => {
