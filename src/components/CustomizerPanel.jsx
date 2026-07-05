@@ -70,6 +70,39 @@ export default function CustomizerPanel({
         />
       </div>
 
+      <div className="flex gap-2 mb-5">
+        <button
+          onClick={() => set("category", "men")}
+          className="flex-1 rounded-xl py-2.5 text-sm font-bold transition-all duration-200"
+          style={{
+            background: params.category === "men"
+              ? "linear-gradient(135deg,#0055bb 0%,#0099ff 100%)"
+              : "rgba(255,255,255,0.5)",
+            color: params.category === "men" ? "#fff" : "#0066cc",
+            border: params.category === "men"
+              ? "none"
+              : "1px solid rgba(255,255,255,0.7)",
+          }}
+        >
+          Men
+        </button>
+        <button
+          onClick={() => set("category", "women")}
+          className="flex-1 rounded-xl py-2.5 text-sm font-bold transition-all duration-200"
+          style={{
+            background: params.category === "women"
+              ? "linear-gradient(135deg,#E11D48 0%,#FB7185 100%)"
+              : "rgba(255,255,255,0.5)",
+            color: params.category === "women" ? "#fff" : "#0066cc",
+            border: params.category === "women"
+              ? "none"
+              : "1px solid rgba(255,255,255,0.7)",
+          }}
+        >
+          Women
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-5">
         <div className="col-span-1">
           <Label>Color Palette</Label>

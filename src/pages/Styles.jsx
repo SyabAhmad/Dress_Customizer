@@ -8,6 +8,7 @@ export default function Styles() {
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState("newest");
   const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
   const [deleteId, setDeleteId] = useState(null);
   const navigate = useNavigate();
 
@@ -42,7 +43,8 @@ export default function Styles() {
 
   const sortedStyles = useMemo(() => {
     const filtered = styles.filter((s) =>
-      s.name?.toLowerCase().includes(search.toLowerCase())
+      s.name?.toLowerCase().includes(search.toLowerCase()) &&
+      (category === "all" || s.category === category)
     );
     const arr = [...filtered];
     if (sort === "newest") arr.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
@@ -70,6 +72,25 @@ export default function Styles() {
               <option value="name">Name A-Z</option>
             </select>
           </div>
+        </div>
+
+        <div className="flex gap-2 mb-6">
+          {["all", "men", "women"].map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setCategory(cat)}
+              className="px-4 py-1.5 rounded-lg text-xs font-bold transition-all capitalize"
+              style={{
+                background: category === cat
+                  ? "linear-gradient(135deg,#0055bb 0%,#0099ff 100%)"
+                  : "rgba(255,255,255,0.5)",
+                color: category === cat ? "#fff" : "#0066cc",
+                border: category === cat ? "none" : "1px solid rgba(255,255,255,0.7)",
+              }}
+            >
+              {cat === "all" ? "All" : cat}
+            </button>
+          ))}
         </div>
 
         {loading ? (

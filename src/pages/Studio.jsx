@@ -18,7 +18,7 @@ export default function Studio() {
     color: "#EC4899", pattern: "solid", sleeveLength: 70,
     neckline: "v-neck", trainLength: 50, texture: "satin",
     textureIntensity: 40, skirtVolume: 60, prompt: "",
-    dressType: "frock",
+    dressType: "frock", category: "women",
   });
   const [savedStyles, setSavedStyles] = useState([]);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
@@ -52,6 +52,7 @@ export default function Studio() {
         sleeve_length: params.sleeveLength, neckline: params.neckline,
         train_length: params.trainLength, texture: params.texture,
         texture_intensity: params.textureIntensity, skirt_volume: params.skirtVolume,
+        category: params.category,
       });
       setSavedStyles((prev) => [res.style, ...prev]);
       if (lastImageUrl) {
@@ -82,6 +83,7 @@ export default function Studio() {
       trainLength: style.trainLength ?? style.train_length ?? p.trainLength,
       textureIntensity: style.textureIntensity ?? style.texture_intensity ?? p.textureIntensity,
       skirtVolume: style.skirtVolume ?? style.skirt_volume ?? p.skirtVolume,
+      category: style.category || p.category,
     }));
     setPrompt((prev) => {
       const withoutSlash = prev.replace(/\/\w*$/, "").trim();
@@ -145,6 +147,7 @@ export default function Studio() {
         sleeveLength: s.sleeve_length ?? p.sleeveLength, neckline: s.neckline || p.neckline,
         trainLength: s.train_length ?? p.trainLength, texture: s.texture || p.texture,
         textureIntensity: s.texture_intensity ?? p.textureIntensity, skirtVolume: s.skirt_volume ?? p.skirtVolume,
+        category: s.category || p.category,
       }));
       setPrompt(s.name ? `Style: ${s.name}` : "");
       setShowCustomize(true);
@@ -502,7 +505,12 @@ export default function Studio() {
                     <button key={style.id} className={`w-full flex items-center justify-between px-3 py-1.5 text-sm transition-colors text-left ${i === slashIndex ? "bg-[#0066cc]/15" : "hover:bg-[#0066cc]/10"}`} style={{ color: "#001a33" }} onClick={() => { setSlashIndex(-1); applyStyle(style); }} onMouseEnter={() => setSlashIndex(i)}>
                       <span className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full border border-white/50 inline-block shrink-0" style={{ background: style.color }} />
-                        {style.name}
+                        <span className="truncate max-w-[140px]">{style.name}</span>
+                        {style.category && (
+                          <span className="text-[9px] uppercase font-bold px-1 py-0.5 rounded shrink-0" style={{ background: style.category === "men" ? "rgba(0,102,204,0.12)" : "rgba(225,29,72,0.12)", color: style.category === "men" ? "#0055bb" : "#E11D48" }}>
+                            {style.category}
+                          </span>
+                        )}
                       </span>
                       <span className="text-[10px] opacity-40 hover:opacity-100 px-1" onClick={(e) => { e.stopPropagation(); deleteStyle(style.id); }}>x</span>
                     </button>
