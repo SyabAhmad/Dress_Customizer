@@ -238,7 +238,7 @@ class SavedStyle(db.Model):
     texture = db.Column(db.String(50), nullable=False, default='satin')
     texture_intensity = db.Column(db.Float, nullable=False, default=40)
     skirt_volume = db.Column(db.Float, nullable=False, default=60)
-    category = db.Column(db.String(10), nullable=False, default='women')
+    category = db.Column(db.String(30), nullable=False, default='simple-party')
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def to_dict(self):

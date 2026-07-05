@@ -36,7 +36,7 @@ def create_style():
         texture=data.get('texture', 'satin'),
         texture_intensity=float(data.get('texture_intensity', 40)),
         skirt_volume=float(data.get('skirt_volume', 60)),
-        category=data.get('category', 'women'),
+        category=data.get('category', 'simple-party'),
     )
     db.session.add(style)
     db.session.commit()

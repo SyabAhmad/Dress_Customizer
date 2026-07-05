@@ -74,21 +74,27 @@ export default function Styles() {
           </div>
         </div>
 
-        <div className="flex gap-2 mb-6">
-          {["all", "men", "women"].map((cat) => (
+        <div className="flex flex-wrap gap-2 mb-6">
+          {[
+            { value: "all", label: "All" },
+            { value: "simple-party", label: "Simple Party" },
+            { value: "wedding-party", label: "Wedding Party" },
+            { value: "family-gathering", label: "Family Gathering" },
+            { value: "university-party", label: "University Party" },
+          ].map((cat) => (
             <button
-              key={cat}
-              onClick={() => setCategory(cat)}
-              className="px-4 py-1.5 rounded-lg text-xs font-bold transition-all capitalize"
+              key={cat.value}
+              onClick={() => setCategory(cat.value)}
+              className="px-4 py-1.5 rounded-lg text-xs font-bold transition-all"
               style={{
-                background: category === cat
+                background: category === cat.value
                   ? "linear-gradient(135deg,#0055bb 0%,#0099ff 100%)"
                   : "rgba(255,255,255,0.5)",
-                color: category === cat ? "#fff" : "#0066cc",
-                border: category === cat ? "none" : "1px solid rgba(255,255,255,0.7)",
+                color: category === cat.value ? "#fff" : "#0066cc",
+                border: category === cat.value ? "none" : "1px solid rgba(255,255,255,0.7)",
               }}
             >
-              {cat === "all" ? "All" : cat}
+              {cat.label}
             </button>
           ))}
         </div>

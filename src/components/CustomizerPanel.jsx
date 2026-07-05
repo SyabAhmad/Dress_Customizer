@@ -70,37 +70,34 @@ export default function CustomizerPanel({
         />
       </div>
 
-      <div className="flex gap-2 mb-5">
-        <button
-          onClick={() => set("category", "men")}
-          className="flex-1 rounded-xl py-2.5 text-sm font-bold transition-all duration-200"
-          style={{
-            background: params.category === "men"
-              ? "linear-gradient(135deg,#0055bb 0%,#0099ff 100%)"
-              : "rgba(255,255,255,0.5)",
-            color: params.category === "men" ? "#fff" : "#0066cc",
-            border: params.category === "men"
-              ? "none"
-              : "1px solid rgba(255,255,255,0.7)",
-          }}
-        >
-          Men
-        </button>
-        <button
-          onClick={() => set("category", "women")}
-          className="flex-1 rounded-xl py-2.5 text-sm font-bold transition-all duration-200"
-          style={{
-            background: params.category === "women"
-              ? "linear-gradient(135deg,#E11D48 0%,#FB7185 100%)"
-              : "rgba(255,255,255,0.5)",
-            color: params.category === "women" ? "#fff" : "#0066cc",
-            border: params.category === "women"
-              ? "none"
-              : "1px solid rgba(255,255,255,0.7)",
-          }}
-        >
-          Women
-        </button>
+      <div className="mb-5">
+        <Label className="mb-2 block">Category</Label>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { value: "simple-party", label: "Simple Party", icon: "🎉" },
+            { value: "wedding-party", label: "Wedding Party", icon: "💒" },
+            { value: "family-gathering", label: "Family Gathering", icon: "👨‍👩‍👧‍👦" },
+            { value: "university-party", label: "University Party", icon: "🎓" },
+          ].map((cat) => (
+            <button
+              key={cat.value}
+              onClick={() => set("category", cat.value)}
+              className="rounded-xl py-2.5 px-3 text-sm font-bold transition-all duration-200 flex items-center gap-2"
+              style={{
+                background: params.category === cat.value
+                  ? "linear-gradient(135deg,#0055bb 0%,#0099ff 100%)"
+                  : "rgba(255,255,255,0.5)",
+                color: params.category === cat.value ? "#fff" : "#0066cc",
+                border: params.category === cat.value
+                  ? "none"
+                  : "1px solid rgba(255,255,255,0.7)",
+              }}
+            >
+              <span className="text-base">{cat.icon}</span>
+              <span>{cat.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-5">

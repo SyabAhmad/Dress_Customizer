@@ -18,7 +18,7 @@ export default function Studio() {
     color: "#EC4899", pattern: "solid", sleeveLength: 70,
     neckline: "v-neck", trainLength: 50, texture: "satin",
     textureIntensity: 40, skirtVolume: 60, prompt: "",
-    dressType: "frock", category: "women",
+    dressType: "frock", category: "simple-party",
   });
   const [savedStyles, setSavedStyles] = useState([]);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
@@ -507,8 +507,8 @@ export default function Studio() {
                         <span className="w-3 h-3 rounded-full border border-white/50 inline-block shrink-0" style={{ background: style.color }} />
                         <span className="truncate max-w-[140px]">{style.name}</span>
                         {style.category && (
-                          <span className="text-[9px] uppercase font-bold px-1 py-0.5 rounded shrink-0" style={{ background: style.category === "men" ? "rgba(0,102,204,0.12)" : "rgba(225,29,72,0.12)", color: style.category === "men" ? "#0055bb" : "#E11D48" }}>
-                            {style.category}
+                          <span className="text-[9px] font-bold px-1 py-0.5 rounded shrink-0 whitespace-nowrap" style={{ background: "rgba(0,102,204,0.12)", color: "#0055bb" }}>
+                            {style.category.replace(/-/g, " ")}
                           </span>
                         )}
                       </span>
