@@ -115,27 +115,30 @@ Keep it concise (under 200 characters). Output ONLY the prompt text, no explanat
 def list_models():
     models = [
         {'id': 'pollinations', 'name': 'Pollinations.ai', 'provider': 'Pollinations.ai',
-         'requires_key': False, 'key_configured': True},
+         'requires_key': False, 'key_configured': True, 'supports_image_input': True},
     ]
     api_key = current_app.config.get('GOOGLE_API_KEY')
     if api_key:
         models.append({'id': 'gemini-enhanced', 'name': 'Gemini-Enhanced', 'provider': 'Google + Pollinations',
-                       'requires_key': True, 'key_configured': True})
+                       'requires_key': True, 'key_configured': True, 'supports_image_input': True})
 
     try:
         resp = requests.get(f"{SUBNP_BASE_URL}/api/free/models", timeout=10)
         if resp.ok:
             for m in resp.json().get('models', []):
                 models.append({'id': f"subnp-{m['model']}", 'name': f"SubNP ({m['model']})",
-                               'provider': m.get('provider', 'SubNP'), 'requires_key': False, 'key_configured': True})
+                               'provider': m.get('provider', 'SubNP'), 'requires_key': False, 'key_configured': True,
+                               'supports_image_input': False})
         else:
             for m in ['turbo', 'flux', 'magic']:
                 models.append({'id': f"subnp-{m}", 'name': f"SubNP ({m})",
-                               'provider': 'SubNP', 'requires_key': False, 'key_configured': True})
+                               'provider': 'SubNP', 'requires_key': False, 'key_configured': True,
+                               'supports_image_input': False})
     except Exception:
         for m in ['turbo', 'flux', 'magic']:
             models.append({'id': f"subnp-{m}", 'name': f"SubNP ({m})",
-                           'provider': 'SubNP', 'requires_key': False, 'key_configured': True})
+                           'provider': 'SubNP', 'requires_key': False, 'key_configured': True,
+                           'supports_image_input': False})
 
     return jsonify({'models': models}), 200
 
@@ -153,6 +156,13 @@ def generate_image():
         params = data.get('params', {})
         model = data.get('model', 'pollinations')
         conv_id = data.get('conversation_id')
+        input_image = data.get('input_image')
+
+        # Save uploaded image to disk if provided
+        input_image_url = None
+        if input_image:
+            image_bytes = base64.b64decode(input_image.split(',')[1] if ',' in input_image else input_image)
+            input_image_url = save_image_to_disk(image_bytes, subfolder='uploads')
 
         # Generate the image
         if model == 'gemini-enhanced':
@@ -165,7 +175,7 @@ def generate_image():
         if model.startswith('subnp-'):
             image_bytes, error = fetch_subnp_image(final_prompt, model.split('-', 1)[1])
         else:
-            image_bytes, error = fetch_pollinations_image(final_prompt)
+            image_bytes, error = fetch_pollinations_image(final_prompt, input_image_url)
 
         if error:
             return jsonify({'error': error}), 500
@@ -197,10 +207,13 @@ def generate_image():
         return jsonify({'error': f'Image generation failed: {str(e)}'}), 500
 
 
-def fetch_pollinations_image(prompt):
+def fetch_pollinations_image(prompt, input_image_url=None):
     try:
         url = f"{POLLINATIONS_BASE}/{requests.utils.quote(prompt)}"
-        resp = requests.get(url, timeout=60)
+        params = {}
+        if input_image_url:
+            params['image'] = input_image_url
+        resp = requests.get(url, params=params, timeout=60)
         if resp.status_code == 200 and len(resp.content) > 1000:
             return resp.content, None
         return None, f"Pollinations returned {resp.status_code}"

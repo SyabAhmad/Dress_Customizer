@@ -199,10 +199,10 @@ export const profilesAPI = {
 export const aiAPI = {
   listModels: () => apiRequest("/ai/models"),
 
-  generateImage: (prompt, params, model, conversation_id) =>
+  generateImage: (prompt, params, model, conversation_id, input_image) =>
     apiRequest("/ai/generate-image", {
       method: "POST",
-      body: JSON.stringify({ prompt, params, model, conversation_id }),
+      body: JSON.stringify({ prompt, params, model, conversation_id, input_image }),
     }),
 
   generateImageText: (prompt) =>

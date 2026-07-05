@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import CustomizerPanel from "../components/CustomizerPanel.jsx";
 import { conversationsAPI, aiAPI, stylesAPI, gownDesignsAPI } from "../utils/api.js";
@@ -31,6 +31,9 @@ export default function Studio() {
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef(null);
   const [lastImageUrl, setLastImageUrl] = useState("");
+  const [inputImage, setInputImage] = useState(null);
+  const [inputImagePreview, setInputImagePreview] = useState(null);
+  const fileInputRef = useRef(null);
   const chatEndRef = useRef(null);
 
   const saveCurrentStyle = () => {
@@ -169,6 +172,13 @@ export default function Studio() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const toBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+  });
+
   const onGenerate = async () => {
     const text = prompt.trim() || params.prompt?.trim() || "Elegant dress";
     if (!text) return;
@@ -180,18 +190,24 @@ export default function Studio() {
     setMessages((prev) => [...prev, userMsg]);
 
     try {
+      let inputImageData = null;
+      if (inputImage) {
+        inputImageData = await toBase64(inputImage);
+      }
+
       const response = await aiAPI.generateImage(text, {
         color: params.color, pattern: params.pattern, neckline: params.neckline,
         sleeve_length: params.sleeveLength, train_length: params.trainLength,
         texture: params.texture, texture_intensity: params.textureIntensity,
         skirt_volume: params.skirtVolume, dress_type: params.dressType,
-      }, selectedModel, conversationId);
+      }, selectedModel, conversationId, inputImageData);
 
       if (response.image) {
         if (response.conversation_id && !conversationId) {
           setConversationId(response.conversation_id);
         }
         setLastImageUrl(response.image);
+        clearInputImage();
         const aiMsg = {
           id: "msg-" + Date.now(), sender_role: "assistant",
           content: "Generated design", image_url: response.image,
@@ -316,6 +332,25 @@ export default function Studio() {
     a.download = `design-${Date.now()}.png`;
     a.click();
   };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setInputImage(file);
+    setInputImagePreview(URL.createObjectURL(file));
+  };
+
+  const clearInputImage = () => {
+    setInputImage(null);
+    if (inputImagePreview) URL.revokeObjectURL(inputImagePreview);
+    setInputImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const supportsImageInput = useMemo(() => {
+    const m = models.find((m) => m.id === selectedModel);
+    return m?.supports_image_input ?? false;
+  }, [models, selectedModel]);
 
   return (
     <div
@@ -485,6 +520,13 @@ export default function Studio() {
           }}
         >
           <div className="flex-1 relative">
+            {inputImagePreview && (
+              <div className="absolute bottom-full left-0 mb-1 flex items-center gap-2 rounded-lg border bg-white/80 p-1.5 shadow-md" style={{ border: "1px solid rgba(255,255,255,0.4)" }}>
+                <img src={inputImagePreview} alt="Input" className="h-10 w-10 rounded object-cover border border-white/50" />
+                <span className="text-[10px] font-medium truncate max-w-[100px]" style={{ color: "#0066cc" }}>{inputImage.name}</span>
+                <button onClick={clearInputImage} className="text-xs p-0.5 rounded hover:bg-white/60" style={{ color: "#E11D48" }}>&#x2715;</button>
+              </div>
+            )}
             {showSlashMenu && (
               <div
                 className="absolute bottom-full left-0 right-0 mb-1 rounded-xl border shadow-lg backdrop-blur-xl overflow-hidden"
@@ -550,6 +592,30 @@ export default function Studio() {
             title={isListening ? "Stop voice input" : "Start voice input"}
           >
             <MicIcon className={`w-4 h-4 ${isListening ? "animate-pulse" : ""}`} />
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={!supportsImageInput}
+            className="rounded-lg p-2.5 transition-all duration-200 shrink-0 disabled:opacity-30 disabled:cursor-not-allowed"
+            style={{
+              background: inputImage ? "linear-gradient(135deg,#0055bb 0%,#0099ff 100%)" : "rgba(255,255,255,0.5)",
+              color: inputImage ? "#fff" : "#0066cc",
+              border: inputImage ? "none" : "1px solid rgba(255,255,255,0.5)",
+            }}
+            title={supportsImageInput ? "Upload a photo of a person" : "This model doesn't support image input"}
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
           </button>
           <button
             onClick={onGenerate}
