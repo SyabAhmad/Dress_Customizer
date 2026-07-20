@@ -5,22 +5,15 @@ function SidebarItem({ icon, label, to, active = false }) {
   return (
     <Link
       to={to}
+      title={label}
       className={
-        "flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[11px] font-medium transition-colors " +
+        "flex items-center justify-center w-8 h-8 rounded-lg transition-all " +
         (active
-          ? "bg-linear-to-r from-[#87ceeb] to-[#0099ff] text-[#001a33]"
-          : "text-[#0066cc] hover:bg-white/40 hover:text-[#001a33]")
+          ? "bg-[#0066cc] text-white shadow-sm"
+          : "text-[#94a3b8] hover:bg-gray-100 hover:text-[#0066cc]")
       }
-      style={{
-        border: active ? "1px solid #0099ff" : "1px solid transparent",
-      }}
     >
-      <span className="shrink-0" style={{ color: active ? "#0099ff" : "#0066cc" }}>
-        {icon}
-      </span>
-      <span className="truncate" style={{ color: active ? "#0099ff" : "#0066cc" }}>
-        {label}
-      </span>
+      {icon}
     </Link>
   );
 }
@@ -35,8 +28,6 @@ export default function Sidebar() {
     ? `${(user.first_name?.[0] || "").toUpperCase()}${(user.last_name?.[0] || "").toUpperCase()}`
     : user?.email?.[0]?.toUpperCase() || "?";
 
-  const displayName = user?.first_name || user?.email?.split("@")[0] || "User";
-
   const handleLogout = () => {
     logout();
     localStorage.removeItem("access_token");
@@ -46,100 +37,78 @@ export default function Sidebar() {
   };
 
   const items = [
-    { to: "/", icon: <HomeIcon className="w-3.5 h-3.5" />, label: "Home" },
-    { to: "/studio", icon: "🎫", label: "Studio" },
-    { to: "/recent-chats", icon: <ChatIcon className="w-3.5 h-3.5" />, label: "Chats" },
-    { to: "/styles", icon: <DesignIcon className="w-3.5 h-3.5" />, label: "Styles" },
-    { to: "/profile", icon: <UserIcon className="w-3.5 h-3.5" />, label: "Profile" },
-    { to: "/settings", icon: <SettingsIcon className="w-3.5 h-3.5" />, label: "Settings" },
+    { to: "/", icon: <HomeIcon className="w-4 h-4" />, label: "Home" },
+    { to: "/studio", icon: <SparkIcon className="w-4 h-4" />, label: "Studio" },
+    { to: "/recent-chats", icon: <ChatIcon className="w-4 h-4" />, label: "Chats" },
+    { to: "/styles", icon: <DesignIcon className="w-4 h-4" />, label: "Styles" },
+    { to: "/settings", icon: <SettingsIcon className="w-4 h-4" />, label: "Settings" },
   ];
 
   return (
-    <aside className="hidden lg:block">
-      <nav
-        className="sticky top-0 h-full overflow-auto px-2.5 py-3 flex flex-col gap-0.5 shadow-sm"
-        style={{
-          border: "1px solid rgba(255,255,255,0.3)",
-          background: "linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2))",
-          backdropFilter: "blur(10px)",
-          color: "#001a33",
-          borderTopLeftRadius: 0,
-          borderBottomLeftRadius: 0,
-          borderTopRightRadius: "0.75rem",
-          borderBottomRightRadius: "0.75rem",
-        }}
-      >
-        {/* Profile */}
-        <Link to="/profile" className="flex items-center gap-2 px-2 py-2 rounded-lg mb-1.5 transition-colors hover:bg-white/40">
-          <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, #0066cc, #0099ff)", color: "#fff" }}>
-            <UserIcon className="w-3.5 h-3.5" />
-          </div>
-          <span className="text-xs font-semibold truncate" style={{ color: "#001a33" }}>{displayName}</span>
-        </Link>
+    <aside className="hidden lg:flex flex-col items-center py-3 px-1.5 shrink-0" style={{ background: "#ffffff", borderRight: "1px solid rgba(0,0,0,0.06)" }}>
+      {/* Profile */}
+      <Link to="/profile" title="Profile" className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold mb-3 transition-all hover:ring-2 hover:ring-[#0066cc]/30" style={{ background: "linear-gradient(135deg, #0066cc, #0099ff)", color: "#fff" }}>
+        {initials}
+      </Link>
 
-        <div style={{ borderTop: "1px solid rgba(0,102,204,0.08)" }} className="mb-1" />
-
-        {/* Navigation */}
+      {/* Nav */}
+      <div className="flex flex-col items-center gap-1 flex-1">
         {items.map((item) => (
           <SidebarItem key={item.to} {...item} active={base === item.to} />
         ))}
+      </div>
 
-        {/* Logout */}
-        <div className="mt-auto pt-2" style={{ borderTop: "1px solid rgba(0,102,204,0.08)" }}>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[11px] font-medium transition-colors text-red-500 hover:bg-red-50"
-          >
-            <LogoutIcon className="w-3.5 h-3.5" />
-            <span>Logout</span>
-          </button>
-        </div>
-      </nav>
+      {/* Logout */}
+      <button
+        onClick={handleLogout}
+        title="Logout"
+        className="w-8 h-8 rounded-lg flex items-center justify-center text-[#94a3b8] hover:bg-red-50 hover:text-red-500 transition-all mt-1"
+      >
+        <LogoutIcon className="w-4 h-4" />
+      </button>
     </aside>
+  );
+}
+
+function SparkIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+    </svg>
   );
 }
 
 function SettingsIcon(props) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
-      <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" />
-      <path d="M3 12h2" /><path d="M19 12h2" />
-      <path d="M12 3v2" /><path d="M12 19v2" />
-      <path d="m5.6 5.6 1.4 1.4" /><path d="m17 17 1.4 1.4" />
-      <path d="m5.6 18.4 1.4-1.4" /><path d="m17 7 1.4-1.4" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+      <circle cx="12" cy="12" r="3" />
     </svg>
   );
 }
 
 function ChatIcon(props) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
-      <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
     </svg>
   );
 }
 
 function DesignIcon(props) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
-      <path d="M3 7h18v11H3z" /><path d="M7 3v4" /><path d="M17 3v4" />
-    </svg>
-  );
-}
-
-function UserIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
-      <path d="M20 21a8 8 0 0 0-16 0" /><circle cx="12" cy="7" r="4" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z" />
+      <path d="M7 7h.01" />
     </svg>
   );
 }
 
 function HomeIcon(props) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
-      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+      <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
     </svg>
   );
 }

@@ -31,19 +31,10 @@ const ProtectedRoute = ({ children }) => {
       <Header />
 
       {/* Sidebar and main content below header */}
-      <div
-        className="flex flex-1 w-full min-h-0"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(135,206,235,0.95), rgba(173,216,230,0.9))",
-        }}
-      >
+      <div className="flex flex-1 w-full min-h-0">
         <Sidebar />
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
           {children}
-          <div className="flex justify-center py-0.5">
-            <span className="text-[9px] tracking-widest select-none font-medium" style={{ color: "rgba(0,102,204,0.25)" }}>MenteE</span>
-          </div>
         </div>
       </div>
     </div>
