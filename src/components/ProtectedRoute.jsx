@@ -27,10 +27,12 @@ const ProtectedRoute = ({ children }) => {
   // Render the protected component inside global layout with header, sidebar and main content
   return (
     <div className="h-screen w-full flex flex-col overflow-hidden">
-      {/* Header spans full width at top */}
-      <Header />
+      {/* Header only on mobile — sidebar handles desktop */}
+      <div className="lg:hidden">
+        <Header />
+      </div>
 
-      {/* Sidebar and main content below header */}
+      {/* Sidebar and main content */}
       <div className="flex flex-1 w-full min-h-0">
         <Sidebar />
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
