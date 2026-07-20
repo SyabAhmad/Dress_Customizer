@@ -5,12 +5,9 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import db
 from app.models import Design
-import base64
-import mimetypes
 import os
-from huggingface_hub import InferenceClient
-from PIL import Image
 import io
+import base64
 
 designs_bp = Blueprint('designs', __name__)
 
@@ -18,7 +15,7 @@ designs_bp = Blueprint('designs', __name__)
 @designs_bp.route('/generate-image', methods=['POST'])
 @jwt_required()
 def generate_image():
-    """Generate an image using Google Generative AI (Gemini)."""
+    """Generate an image using Google Imagen 3."""
     try:
         data = request.get_json()
         prompt = data.get('prompt')
@@ -26,35 +23,32 @@ def generate_image():
         if not prompt:
             return jsonify({'error': 'Prompt is required'}), 400
 
-        # Get API key from environment
-        import google.generativeai as genai
         api_key = os.environ.get("GOOGLE_API_KEY")
         if not api_key:
-            return jsonify({'error': 'GOOGLE_API_KEY not configured'}), 500
+            return jsonify({'error': 'Google Imagen is not available. GOOGLE_API_KEY is not configured.'}), 503
 
-        genai.configure(api_key=api_key)
-        
-        # User requested the latest gemini model (flash) for image generation
-        # Note: Gemini's general text/multimodal models (like flash) don't output images.
-        # Image output from Google's API strictly requires Imagen models.
-        # But per user request we'll use imagen-3.0-generate-001 which is the Google AI 
-        # standard for image generation in this SDK.
-        imagen = genai.ImageGenerationModel("imagen-3.0-generate-001")
-        
-        result = imagen.generate_images(
-            prompt=f"A fashion illustration of an elegant dress, {prompt}. Highly detailed, haute couture.",
-            number_of_images=1,
-            aspect_ratio="3:4"
+        from google import genai
+        client = genai.Client(api_key=api_key)
+
+        response = client.models.generate_content(
+            model='gemini-3.1-flash-lite-image',
+            contents=f"A fashion illustration of an elegant dress, {prompt}. Highly detailed, haute couture.",
+            config={
+                'response_modalities': ['TEXT', 'IMAGE'],
+            }
         )
 
-        image = result.images[0]._pil_image
-        
-        # Convert PIL.Image to base64 data URL
-        buffer = io.BytesIO()
-        image.save(buffer, format="PNG")
-        buffer.seek(0)
-        image_data = buffer.getvalue()
-        encoded = base64.b64encode(image_data).decode('utf-8')
+        # Extract image from response parts
+        image_bytes = None
+        for part in response.candidates[0].content.parts:
+            if hasattr(part, 'inline_data') and part.inline_data:
+                image_bytes = part.inline_data.data
+                break
+
+        if not image_bytes:
+            return jsonify({'error': 'Google Gemini returned no image. Please try again.'}), 500
+
+        encoded = base64.b64encode(image_bytes).decode('utf-8')
         data_url = f"data:image/png;base64,{encoded}"
 
         return jsonify({
@@ -65,7 +59,7 @@ def generate_image():
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': f'Google Imagen failed: {str(e)}'}), 500
 
 
 @designs_bp.route('/modify-image', methods=['POST'])

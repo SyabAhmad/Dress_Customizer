@@ -118,9 +118,8 @@ def list_models():
          'requires_key': False, 'key_configured': True, 'supports_image_input': True},
     ]
     api_key = current_app.config.get('GOOGLE_API_KEY')
-    if api_key:
-        models.append({'id': 'gemini-enhanced', 'name': 'Gemini-Enhanced', 'provider': 'Google + Pollinations',
-                       'requires_key': True, 'key_configured': True, 'supports_image_input': True})
+    models.append({'id': 'gemini-enhanced', 'name': 'Gemini-Enhanced', 'provider': 'Gemini Image',
+                   'requires_key': True, 'key_configured': bool(api_key), 'supports_image_input': True})
 
     try:
         resp = requests.get(f"{SUBNP_BASE_URL}/api/free/models", timeout=10)
@@ -165,20 +164,49 @@ def generate_image():
             input_image_url = save_image_to_disk(image_bytes, subfolder='uploads')
 
         # Generate the image
+        input_image_bytes = None
+        if input_image_url:
+            # Read back the saved image for passing to Gemini
+            upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'uploads',
+                                       os.path.basename(input_image_url))
+            if os.path.exists(upload_path):
+                with open(upload_path, 'rb') as f:
+                    input_image_bytes = f.read()
+
         if model == 'gemini-enhanced':
-            enhanced = enhance_prompt_with_gemini(prompt, params)
-            final_prompt = enhanced if enhanced else build_dress_prompt(prompt, params)
+            if input_image_bytes:
+                # Image input: build a prompt that references the uploaded photo
+                final_prompt = (
+                    f"Look at this photo of me. {prompt or 'Choose the best dress for me and show it worn on me.'} "
+                    f"Generate a photorealistic image of me wearing the recommended outfit. "
+                    f"Keep my face and body from the original photo. "
+                    f"Make it look natural, like a real photo."
+                )
+            else:
+                enhanced = enhance_prompt_with_gemini(prompt, params)
+                final_prompt = enhanced if enhanced else build_dress_prompt(prompt, params)
         else:
             final_prompt = build_dress_prompt(prompt, params)
 
         # Hit the image provider
-        if model.startswith('subnp-'):
+        if model == 'gemini-enhanced':
+            api_key = current_app.config.get('GOOGLE_API_KEY')
+            if not api_key:
+                return jsonify({'error': 'Google Imagen is not available. GOOGLE_API_KEY is not configured. Please select another model.'}), 503
+            image_bytes, error = fetch_google_imagen(final_prompt, input_image_bytes)
+            if error:
+                return jsonify({'error': f'Google Imagen is not available: {error}. Please select another model.'}), 503
+        elif model.startswith('subnp-'):
             image_bytes, error = fetch_subnp_image(final_prompt, model.split('-', 1)[1])
+            if error:
+                return jsonify({'error': f'SubNP is not available: {error}. Please select another model.'}), 503
         else:
             image_bytes, error = fetch_pollinations_image(final_prompt, input_image_url)
+            if error:
+                return jsonify({'error': f'Pollinations is not available: {error}. Please select another model.'}), 503
 
-        if error:
-            return jsonify({'error': error}), 500
+        if not image_bytes:
+            return jsonify({'error': f'Model "{model}" failed to generate an image. Please select another model.'}), 500
 
         # Save image to disk
         image_path = save_image_to_disk(image_bytes)
@@ -219,6 +247,42 @@ def fetch_pollinations_image(prompt, input_image_url=None):
         return None, f"Pollinations returned {resp.status_code}"
     except Exception as e:
         return None, f'Pollinations failed: {str(e)}'
+
+
+def fetch_google_imagen(prompt, input_image_bytes=None):
+    api_key = current_app.config.get('GOOGLE_API_KEY')
+    if not api_key:
+        return None, 'GOOGLE_API_KEY not configured'
+
+    try:
+        from google import genai
+        from google.genai import types
+        client = genai.Client(api_key=api_key)
+
+        contents = []
+        if input_image_bytes:
+            contents.append(types.Part.from_bytes(
+                data=input_image_bytes,
+                mime_type='image/png',
+            ))
+        contents.append(prompt)
+
+        response = client.models.generate_content(
+            model='gemini-3.1-flash-lite-image',
+            contents=contents,
+            config={
+                'response_modalities': ['TEXT', 'IMAGE'],
+            }
+        )
+
+        # Extract image from response parts
+        for part in response.candidates[0].content.parts:
+            if hasattr(part, 'inline_data') and part.inline_data:
+                return part.inline_data.data, None
+
+        return None, 'Google Gemini returned no image'
+    except Exception as e:
+        return None, f'Google Gemini failed: {str(e)}'
 
 
 def fetch_subnp_image(prompt, subnp_model='turbo'):
