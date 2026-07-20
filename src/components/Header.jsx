@@ -66,17 +66,14 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-3">
-          {isAuthenticated && user && (
-            <div className="hidden md:flex items-center gap-2.5">
-              <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold shadow-sm"
-                style={{ background: "linear-gradient(135deg,#0066cc,#0099ff)", color: "#fff" }}
-              >
-                {initials}
-              </div>
-              <span className="text-xs font-medium max-w-[120px] truncate" style={{ color: "#001a33" }}>
-                {user.first_name ? `${user.first_name} ${user.last_name}`.trim() : user.email}
-              </span>
+          {!isAuthenticated && (
+            <div className="hidden md:flex items-center gap-2">
+              <Link to="/signin" className="text-xs px-3 py-1.5 rounded-lg font-medium" style={{ border: "1px solid rgba(255,255,255,0.4)", color: "#001a33", background: "rgba(255,255,255,0.3)" }}>
+                Sign in
+              </Link>
+              <Link to="/signup" className="text-xs px-3 py-1.5 rounded-lg font-medium text-white" style={{ background: "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)" }}>
+                Sign up
+              </Link>
             </div>
           )}
 
@@ -89,43 +86,31 @@ export default function Header() {
           >
             {menuOpen ? <CloseIcon className="w-5 h-5" /> : <MenuIcon className="w-5 h-5" />}
           </button>
-
-          {isAuthenticated ? (
-            <button
-              onClick={handleLogout}
-              className="hidden md:inline text-xs px-3 py-1.5 rounded-lg font-medium transition-all hover:scale-105"
-              style={{ background: "rgba(220,38,38,0.5)", color: "#fff" }}
-            >
-              Logout
-            </button>
-          ) : (
-            <div className="hidden md:flex items-center gap-2">
-              <Link to="/signin" className="text-xs px-3 py-1.5 rounded-lg font-medium" style={{ border: "1px solid rgba(255,255,255,0.4)", color: "#001a33", background: "rgba(255,255,255,0.3)" }}>
-                Sign in
-              </Link>
-              <Link to="/signup" className="text-xs px-3 py-1.5 rounded-lg font-medium text-white" style={{ background: "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)" }}>
-                Sign up
-              </Link>
-            </div>
-          )}
         </div>
       </div>
 
       {menuOpen && (
         <nav className="md:hidden">
-          <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-2" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "linear-gradient(180deg, rgba(135,206,235,0.9), rgba(173,216,230,0.85))" }}>
+          <div className="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.3)", background: "linear-gradient(180deg, rgba(135,206,235,0.9), rgba(173,216,230,0.85))" }}>
             {isAuthenticated ? (
               <>
-                <button onClick={handleLogout} className="w-full text-left px-3 py-2 rounded-md font-medium text-white" style={{ background: "linear-gradient(90deg,#dc2626 0%,#f87171 100%)" }}>
+                <Link to="/" onClick={() => setMenuOpen(false)} className="px-3 py-1.5 rounded-md text-xs font-medium" style={{ color: "#001a33" }}>Home</Link>
+                <Link to="/studio" onClick={() => setMenuOpen(false)} className="px-3 py-1.5 rounded-md text-xs font-medium" style={{ color: "#001a33" }}>Studio</Link>
+                <Link to="/recent-chats" onClick={() => setMenuOpen(false)} className="px-3 py-1.5 rounded-md text-xs font-medium" style={{ color: "#001a33" }}>Recent Chats</Link>
+                <Link to="/styles" onClick={() => setMenuOpen(false)} className="px-3 py-1.5 rounded-md text-xs font-medium" style={{ color: "#001a33" }}>Styles</Link>
+                <Link to="/profile" onClick={() => setMenuOpen(false)} className="px-3 py-1.5 rounded-md text-xs font-medium" style={{ color: "#001a33" }}>Profile</Link>
+                <Link to="/settings" onClick={() => setMenuOpen(false)} className="px-3 py-1.5 rounded-md text-xs font-medium" style={{ color: "#001a33" }}>Settings</Link>
+                <div style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }} className="my-1" />
+                <button onClick={handleLogout} className="w-full text-left px-3 py-1.5 rounded-md text-xs font-medium text-red-500">
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link to="/signin" onClick={() => setMenuOpen(false)} className="w-full text-left px-3 py-2 rounded-md font-medium" style={{ border: "1px solid rgba(255,255,255,0.3)", color: "#001a33" }}>
+                <Link to="/signin" onClick={() => setMenuOpen(false)} className="w-full text-left px-3 py-2 rounded-md font-medium text-xs" style={{ border: "1px solid rgba(255,255,255,0.3)", color: "#001a33" }}>
                   Sign in
                 </Link>
-                <Link to="/signup" onClick={() => setMenuOpen(false)} className="w-full text-left px-3 py-2 rounded-md font-medium text-white" style={{ background: "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)" }}>
+                <Link to="/signup" onClick={() => setMenuOpen(false)} className="w-full text-left px-3 py-2 rounded-md font-medium text-xs text-white" style={{ background: "linear-gradient(90deg,#0066cc 0%,#0099ff 100%)" }}>
                   Sign up
                 </Link>
               </>
