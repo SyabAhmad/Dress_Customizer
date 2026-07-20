@@ -41,7 +41,6 @@ export default function Sidebar() {
   };
 
   const items = [
-    { to: "/", icon: <HomeIcon className="w-4 h-4" />, label: "Home" },
     { to: "/studio", icon: <SparkIcon className="w-4 h-4" />, label: "Studio" },
     { to: "/recent-chats", icon: <ChatIcon className="w-4 h-4" />, label: "Chats" },
     { to: "/styles", icon: <DesignIcon className="w-4 h-4" />, label: "Styles" },
@@ -57,16 +56,18 @@ export default function Sidebar() {
         borderRight: "1px solid rgba(0,0,0,0.06)",
       }}
     >
-      {/* Profile */}
-      <div className={`flex items-center mb-3 ${collapsed ? "justify-center px-0" : "gap-2.5 px-3"}`}>
-        <Link to="/profile" title="Profile" className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 transition-all hover:ring-2 hover:ring-[#0066cc]/30" style={{ background: "linear-gradient(135deg, #0066cc, #0099ff)", color: "#fff" }}>
+      {/* Top: Toggle + Profile */}
+      <div className={`flex items-center mb-2 ${collapsed ? "flex-col gap-2" : "justify-between px-2"}`}>
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="w-7 h-7 rounded-lg flex items-center justify-center text-[#94a3b8] hover:bg-gray-100 hover:text-[#0066cc] transition-all shrink-0"
+        >
+          {collapsed ? <ChevronRightIcon className="w-3.5 h-3.5" /> : <ChevronLeftIcon className="w-3.5 h-3.5" />}
+        </button>
+        <Link to="/profile" title="Profile" className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 transition-all hover:ring-2 hover:ring-[#0066cc]/30" style={{ background: "linear-gradient(135deg, #0066cc, #0099ff)", color: "#fff" }}>
           {initials}
         </Link>
-        {!collapsed && (
-          <span className="text-[11px] font-semibold truncate" style={{ color: "#001a33" }}>
-            {user?.first_name || user?.email?.split("@")[0] || "User"}
-          </span>
-        )}
       </div>
 
       <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }} className={`mb-2 ${collapsed ? "mx-2" : "mx-3"}`} />
@@ -78,9 +79,20 @@ export default function Sidebar() {
         ))}
       </div>
 
-      {/* Bottom: Logout + Toggle */}
+      {/* Bottom: Home + Logout */}
       <div className={`flex flex-col gap-0.5 ${collapsed ? "items-center px-0" : "px-2"}`}>
         <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }} className={`mb-1 ${collapsed ? "w-5" : "w-full"}`} />
+        <Link
+          to="/"
+          title="Home"
+          className={
+            "flex items-center gap-2.5 rounded-lg text-[#94a3b8] hover:bg-gray-100 hover:text-[#0066cc] transition-all " +
+            (collapsed ? "w-8 h-8 justify-center" : "w-full px-2.5 py-1.5")
+          }
+        >
+          <HomeIcon className="w-4 h-4 shrink-0" />
+          {!collapsed && <span className="text-[11px] font-medium">Home</span>}
+        </Link>
         <button
           onClick={handleLogout}
           title="Logout"
@@ -91,17 +103,6 @@ export default function Sidebar() {
         >
           <LogoutIcon className="w-4 h-4 shrink-0" />
           {!collapsed && <span className="text-[11px] font-medium">Logout</span>}
-        </button>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className={
-            "flex items-center gap-2.5 rounded-lg text-[#94a3b8] hover:bg-gray-100 hover:text-[#0066cc] transition-all " +
-            (collapsed ? "w-8 h-8 justify-center" : "w-full px-2.5 py-1.5")
-          }
-        >
-          {collapsed ? <ChevronRightIcon className="w-4 h-4 shrink-0" /> : <ChevronLeftIcon className="w-4 h-4 shrink-0" />}
-          {!collapsed && <span className="text-[11px] font-medium">Collapse</span>}
         </button>
       </div>
     </aside>
