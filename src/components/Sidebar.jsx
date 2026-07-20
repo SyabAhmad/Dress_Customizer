@@ -1,4 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext.jsx";
 
 function SidebarItem({ icon, label, to, active = false }) {
   return (
@@ -26,7 +27,25 @@ function SidebarItem({ icon, label, to, active = false }) {
 
 export default function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout, user } = useAuth();
   const base = "/" + (location.pathname.split("/")[1] || "");
+
+  const initials = user
+    ? `${(user.first_name?.[0] || "").toUpperCase()}${(user.last_name?.[0] || "").toUpperCase()}`
+    : user?.email?.[0]?.toUpperCase() || "?";
+
+  const displayName = user?.first_name
+    ? `${user.first_name} ${user.last_name || ""}`.trim()
+    : user?.email || "User";
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("user-name");
+    navigate("/");
+  };
 
   const items = [
     { to: "/", icon: <HomeIcon className="w-4 h-4" />, label: "Home" },
@@ -40,7 +59,7 @@ export default function Sidebar() {
   return (
     <aside className="hidden lg:block">
       <nav
-        className="sticky top-0 border h-full overflow-auto p-4 flex flex-col gap-3 shadow-sm"
+        className="sticky top-0 border h-full overflow-auto p-4 flex flex-col gap-1 shadow-sm"
         style={{
           border: "1px solid rgba(255,255,255,0.3)",
           background: "linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2))",
@@ -52,12 +71,35 @@ export default function Sidebar() {
           borderBottomRightRadius: "0.75rem",
         }}
       >
-        <div className="px-2 pb-1 text-xs font-medium uppercase tracking-wider text-[#0066cc]">
+        {/* Profile */}
+        <Link to="/profile" className="flex items-center gap-2.5 px-2 py-2.5 rounded-lg mb-2 transition-colors hover:bg-white/40" style={{ borderBottom: "1px solid rgba(0,102,204,0.1)" }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-bold shrink-0" style={{ background: "linear-gradient(135deg, #0066cc, #0099ff)", color: "#fff" }}>
+            {initials}
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs font-semibold truncate" style={{ color: "#001a33" }}>{displayName}</p>
+            <p className="text-[10px] truncate" style={{ color: "#94a3b8" }}>{user?.email}</p>
+          </div>
+        </Link>
+
+        {/* Navigation */}
+        <div className="px-2 py-1 text-[10px] font-medium uppercase tracking-wider" style={{ color: "#94a3b8" }}>
           Navigation
         </div>
         {items.map((item) => (
           <SidebarItem key={item.to} {...item} active={base === item.to} />
         ))}
+
+        {/* Logout */}
+        <div className="mt-auto pt-3" style={{ borderTop: "1px solid rgba(0,102,204,0.1)" }}>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors text-red-500 hover:bg-red-50"
+          >
+            <LogoutIcon className="w-4 h-4" />
+            <span style={{ letterSpacing: 1 }}>Logout</span>
+          </button>
+        </div>
       </nav>
     </aside>
   );
@@ -104,6 +146,16 @@ function HomeIcon(props) {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
       <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  );
+}
+
+function LogoutIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
     </svg>
   );
 }
