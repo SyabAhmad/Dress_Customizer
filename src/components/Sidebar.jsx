@@ -6,10 +6,10 @@ function SidebarItem({ icon, label, to, active = false }) {
     <Link
       to={to}
       className={
-        "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors " +
+        "flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[11px] font-medium transition-colors " +
         (active
-          ? "bg-linear-to-r from-[#87ceeb] to-[#0099ff] text-[#001a33] border border-transparent"
-          : "text-[#0066cc] hover:bg-linear-to-r hover:from-[#b3e0ff] hover:to-[#87ceeb] hover:text-[#001a33]")
+          ? "bg-linear-to-r from-[#87ceeb] to-[#0099ff] text-[#001a33]"
+          : "text-[#0066cc] hover:bg-white/40 hover:text-[#001a33]")
       }
       style={{
         border: active ? "1px solid #0099ff" : "1px solid transparent",
@@ -18,7 +18,7 @@ function SidebarItem({ icon, label, to, active = false }) {
       <span className="shrink-0" style={{ color: active ? "#0099ff" : "#0066cc" }}>
         {icon}
       </span>
-      <span className="truncate" style={{ color: active ? "#0099ff" : "#0066cc", letterSpacing: 1 }}>
+      <span className="truncate" style={{ color: active ? "#0099ff" : "#0066cc" }}>
         {label}
       </span>
     </Link>
@@ -35,9 +35,7 @@ export default function Sidebar() {
     ? `${(user.first_name?.[0] || "").toUpperCase()}${(user.last_name?.[0] || "").toUpperCase()}`
     : user?.email?.[0]?.toUpperCase() || "?";
 
-  const displayName = user?.first_name
-    ? `${user.first_name} ${user.last_name || ""}`.trim()
-    : user?.email || "User";
+  const displayName = user?.first_name || user?.email?.split("@")[0] || "User";
 
   const handleLogout = () => {
     logout();
@@ -48,18 +46,18 @@ export default function Sidebar() {
   };
 
   const items = [
-    { to: "/", icon: <HomeIcon className="w-4 h-4" />, label: "Home" },
+    { to: "/", icon: <HomeIcon className="w-3.5 h-3.5" />, label: "Home" },
     { to: "/studio", icon: "🎫", label: "Studio" },
-    { to: "/recent-chats", icon: <ChatIcon className="w-4 h-4" />, label: "Recent Chats" },
-    { to: "/styles", icon: <DesignIcon className="w-4 h-4" />, label: "Styles" },
-    { to: "/profile", icon: <UserIcon className="w-4 h-4" />, label: "Profile" },
-    { to: "/settings", icon: <SettingsIcon className="w-4 h-4" />, label: "Settings" },
+    { to: "/recent-chats", icon: <ChatIcon className="w-3.5 h-3.5" />, label: "Chats" },
+    { to: "/styles", icon: <DesignIcon className="w-3.5 h-3.5" />, label: "Styles" },
+    { to: "/profile", icon: <UserIcon className="w-3.5 h-3.5" />, label: "Profile" },
+    { to: "/settings", icon: <SettingsIcon className="w-3.5 h-3.5" />, label: "Settings" },
   ];
 
   return (
     <aside className="hidden lg:block">
       <nav
-        className="sticky top-0 border h-full overflow-auto p-4 flex flex-col gap-1 shadow-sm"
+        className="sticky top-0 h-full overflow-auto px-2.5 py-3 flex flex-col gap-0.5 shadow-sm"
         style={{
           border: "1px solid rgba(255,255,255,0.3)",
           background: "linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.2))",
@@ -72,32 +70,28 @@ export default function Sidebar() {
         }}
       >
         {/* Profile */}
-        <Link to="/profile" className="flex items-center gap-2.5 px-2 py-2.5 rounded-lg mb-2 transition-colors hover:bg-white/40" style={{ borderBottom: "1px solid rgba(0,102,204,0.1)" }}>
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-bold shrink-0" style={{ background: "linear-gradient(135deg, #0066cc, #0099ff)", color: "#fff" }}>
-            {initials}
+        <Link to="/profile" className="flex items-center gap-2 px-2 py-2 rounded-lg mb-1.5 transition-colors hover:bg-white/40">
+          <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, #0066cc, #0099ff)", color: "#fff" }}>
+            <UserIcon className="w-3.5 h-3.5" />
           </div>
-          <div className="min-w-0">
-            <p className="text-xs font-semibold truncate" style={{ color: "#001a33" }}>{displayName}</p>
-            <p className="text-[10px] truncate" style={{ color: "#94a3b8" }}>{user?.email}</p>
-          </div>
+          <span className="text-xs font-semibold truncate" style={{ color: "#001a33" }}>{displayName}</span>
         </Link>
 
+        <div style={{ borderTop: "1px solid rgba(0,102,204,0.08)" }} className="mb-1" />
+
         {/* Navigation */}
-        <div className="px-2 py-1 text-[10px] font-medium uppercase tracking-wider" style={{ color: "#94a3b8" }}>
-          Navigation
-        </div>
         {items.map((item) => (
           <SidebarItem key={item.to} {...item} active={base === item.to} />
         ))}
 
         {/* Logout */}
-        <div className="mt-auto pt-3" style={{ borderTop: "1px solid rgba(0,102,204,0.1)" }}>
+        <div className="mt-auto pt-2" style={{ borderTop: "1px solid rgba(0,102,204,0.08)" }}>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors text-red-500 hover:bg-red-50"
+            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[11px] font-medium transition-colors text-red-500 hover:bg-red-50"
           >
-            <LogoutIcon className="w-4 h-4" />
-            <span style={{ letterSpacing: 1 }}>Logout</span>
+            <LogoutIcon className="w-3.5 h-3.5" />
+            <span>Logout</span>
           </button>
         </div>
       </nav>
