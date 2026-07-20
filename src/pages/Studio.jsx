@@ -371,19 +371,16 @@ export default function Studio() {
         color: "#001a33",
       }}
     >
-      <div className="flex items-center justify-between px-3 py-2 border-b shrink-0" style={{ borderColor: "rgba(0,0,0,0.06)", background: "#ffffff" }}>
-        <h1 className="text-sm font-bold tracking-wide" style={{ color: "#001a33" }}>
-          {conversationId ? "Chat" : "New Chat"}
-        </h1>
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-center px-3 py-2 shrink-0">
+        <div className="flex items-center gap-1.5">
           {conversationId && (
             <button
               onClick={resetChat}
-              className="text-[11px] px-2.5 py-1 rounded-lg font-medium transition-all shrink-0 hover:shadow-sm"
+              className="text-[11px] px-2.5 py-1 rounded-full font-medium transition-all shrink-0 hover:shadow-sm"
               style={{
                 background: "#ffffff",
                 color: "#0066cc",
-                border: "1px solid rgba(0,102,204,0.2)",
+                border: "1px solid rgba(0,102,204,0.15)",
               }}
             >
               + New Chat
@@ -392,7 +389,7 @@ export default function Studio() {
           <select
             value={selectedModel}
             onChange={(e) => setSelectedModel(e.target.value)}
-            className="text-[11px] rounded-lg border px-2 py-1 focus:outline-none focus:ring-2 focus:ring-[#0099ff]/30 cursor-pointer transition-all"
+            className="text-[11px] rounded-full border px-2.5 py-1 focus:outline-none focus:ring-2 focus:ring-[#0099ff]/30 cursor-pointer transition-all"
             style={{ border: "1px solid rgba(0,0,0,0.08)", background: "#ffffff", color: "#001a33" }}
           >
             {models.map((m) => (
@@ -403,11 +400,11 @@ export default function Studio() {
           </select>
           <button
             onClick={() => setShowCustomize(!showCustomize)}
-            className="text-[11px] px-2.5 py-1 rounded-lg font-medium transition-all shrink-0 hover:shadow-sm"
+            className="text-[11px] px-2.5 py-1 rounded-full font-medium transition-all shrink-0 hover:shadow-sm"
             style={{
               background: showCustomize ? "linear-gradient(135deg, #0066cc, #0099ff)" : "#ffffff",
               color: showCustomize ? "#fff" : "#0066cc",
-              border: showCustomize ? "none" : "1px solid rgba(0,102,204,0.2)",
+              border: showCustomize ? "none" : "1px solid rgba(0,102,204,0.15)",
             }}
           >
             Customize
@@ -536,9 +533,9 @@ export default function Studio() {
         <div ref={chatEndRef} />
       </div>
 
-      <div className="px-3 pb-3 pt-1.5 shrink-0">
+      <div className="px-4 pb-3 pt-1.5 shrink-0 flex justify-center">
         <div
-          className="flex items-end gap-1.5 rounded-xl border p-2"
+          className="flex items-end gap-1.5 rounded-full border p-1.5 w-full max-w-lg"
           style={{
             border: "1px solid rgba(0,0,0,0.08)",
             background: "#ffffff",
@@ -592,27 +589,26 @@ export default function Studio() {
               value={prompt}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              placeholder="Describe what you want to design... (type / for saved styles)"
+              placeholder="Describe what you want to design..."
               rows={1}
-              className="w-full resize-none rounded-lg border px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#0099ff]/30 transition-all"
+              className="w-full resize-none rounded-full px-3 py-1.5 text-xs focus:outline-none transition-all"
               style={{
-                border: "1px solid rgba(0,0,0,0.08)",
-                background: "#f8fafc",
+                background: "transparent",
                 color: "#001a33",
               }}
             />
           </div>
           <button
             onClick={toggleVoiceInput}
-            className="rounded-lg p-2 transition-all duration-200 shrink-0 hover:shadow-sm"
+            className="rounded-full p-1.5 transition-all duration-200 shrink-0 hover:shadow-sm"
             style={{
               background: isListening
                 ? "linear-gradient(135deg,#E11D48,#FB7185)"
-                : "#ffffff",
+                : "transparent",
               color: isListening ? "#fff" : "#0066cc",
               border: isListening
                 ? "2px solid #E11D48"
-                : "1px solid rgba(0,102,204,0.15)",
+                : "none",
               boxShadow: isListening ? "0 0 12px rgba(225,29,72,0.4)" : "none",
             }}
             title={isListening ? "Stop voice input" : "Start voice input"}
@@ -629,11 +625,11 @@ export default function Studio() {
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={!supportsImageInput}
-            className="rounded-lg p-2 transition-all duration-200 shrink-0 disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-sm"
+            className="rounded-full p-1.5 transition-all duration-200 shrink-0 disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-sm"
             style={{
-              background: inputImage ? "linear-gradient(135deg, #0066cc, #0099ff)" : "#ffffff",
+              background: inputImage ? "linear-gradient(135deg, #0066cc, #0099ff)" : "transparent",
               color: inputImage ? "#fff" : "#0066cc",
-              border: inputImage ? "none" : "1px solid rgba(0,102,204,0.15)",
+              border: inputImage ? "none" : "none",
             }}
             title={supportsImageInput ? "Upload a photo of a person" : "This model doesn't support image input"}
           >
@@ -646,7 +642,7 @@ export default function Studio() {
           <button
             onClick={onGenerate}
             disabled={isGenerating || !prompt.trim()}
-            className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 font-bold shadow-sm transition-all duration-200 hover:shadow-md hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 whitespace-nowrap shrink-0"
+            className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 font-bold shadow-sm transition-all duration-200 hover:shadow-md hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 whitespace-nowrap shrink-0"
             style={{
               background: "linear-gradient(135deg, #0066cc 0%, #0099ff 100%)",
               color: "#ffffff",
@@ -661,9 +657,6 @@ export default function Studio() {
             )}
           </button>
         </div>
-        <p className="mt-1 text-[9px] text-center font-medium" style={{ color: "#94a3b8" }}>
-          Press Enter to send, Shift+Enter for new line
-        </p>
       </div>
     </div>
   );
