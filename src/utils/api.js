@@ -205,10 +205,10 @@ export const aiAPI = {
       body: JSON.stringify({ prompt, params, model, conversation_id, input_image }),
     }),
 
-  generateImageText: (prompt) =>
-    apiRequest("/ai/generate-image-text", {
+  generateText: (prompt, model, conversation_id, input_image) =>
+    apiRequest("/ai/generate-text", {
       method: "POST",
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({ prompt, model, conversation_id, input_image }),
     }),
 };
 

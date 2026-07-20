@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext.jsx";
 import CustomizerPanel from "../components/CustomizerPanel.jsx";
 import { conversationsAPI, aiAPI, stylesAPI, gownDesignsAPI } from "../utils/api.js";
 import toast from "react-hot-toast";
@@ -7,12 +8,16 @@ import toast from "react-hot-toast";
 export default function Studio() {
   const location = useLocation();
   const { convId } = useParams();
+  const { user } = useAuth();
   const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState([]);
   const [conversationId, setConversationId] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [models, setModels] = useState([]);
+  const [textModels, setTextModels] = useState([]);
   const [selectedModel, setSelectedModel] = useState("pollinations");
+  const [genMode, setGenMode] = useState("image");
   const [showCustomize, setShowCustomize] = useState(false);
   const [params, setParams] = useState({
     color: "#EC4899", pattern: "solid", sleeveLength: 70,
@@ -35,6 +40,14 @@ export default function Studio() {
   const [inputImagePreview, setInputImagePreview] = useState(null);
   const fileInputRef = useRef(null);
   const chatEndRef = useRef(null);
+
+  const userInitials = user
+    ? `${(user.first_name?.[0] || "").toUpperCase()}${(user.last_name?.[0] || "").toUpperCase()}`
+    : user?.email?.[0]?.toUpperCase() || "?";
+
+  const formatMsgTime = (dateStr) => {
+    return new Date(dateStr).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
 
   const saveCurrentStyle = () => {
     setSaveName("");
@@ -111,18 +124,17 @@ export default function Studio() {
     stylesAPI.list().then((res) => setSavedStyles(res.styles || [])).catch(() => {});
 
     aiAPI.listModels().then((res) => {
-      if (res.models?.length) {
-        setModels(res.models);
-        const def = res.models.find((m) => m.id === "pollinations")
-          || res.models.find((m) => m.key_configured && !m.requires_key)
-          || res.models.find((m) => m.key_configured)
-          || res.models[0];
-        setSelectedModel(def.id);
-      }
+      const img = res.image_models || [];
+      const txt = res.text_models || [];
+      setModels(img);
+      setTextModels(txt);
+      const def = img.find((m) => m.id === "pollinations")
+        || img.find((m) => m.key_configured && !m.requires_key)
+        || img[0];
+      if (def) setSelectedModel(def.id);
     }).catch(() => {
       setModels([
-        { id: "pollinations", name: "Pollinations.ai", provider: "Pollinations.ai", requires_key: false, key_configured: true },
-        { id: "subnp-turbo", name: "SubNP (turbo)", provider: "SubNP", requires_key: false, key_configured: true },
+        { id: "pollinations", name: "Pollinations.ai", provider: "Pollinations.ai", type: "image", requires_key: false, key_configured: true },
       ]);
     });
   }, []);
@@ -183,13 +195,14 @@ export default function Studio() {
     const text = prompt.trim() || params.prompt?.trim() || "Elegant dress";
     if (!text) return;
 
-    const currentModel = models.find((m) => m.id === selectedModel);
+    const currentModel = models.find((m) => m.id === selectedModel) || textModels.find((m) => m.id === selectedModel);
     if (currentModel?.requires_key && !currentModel?.key_configured) {
       toast.error(`"${currentModel.name}" is not available. Please select another model.`);
       return;
     }
 
     setIsGenerating(true);
+    setIsTyping(true);
     setPrompt("");
 
     const userMsg = {
@@ -205,35 +218,50 @@ export default function Studio() {
         inputImageData = await toBase64(inputImage);
       }
 
-      const response = await aiAPI.generateImage(text, {
-        color: params.color, pattern: params.pattern, neckline: params.neckline,
-        sleeve_length: params.sleeveLength, train_length: params.trainLength,
-        texture: params.texture, texture_intensity: params.textureIntensity,
-        skirt_volume: params.skirtVolume, dress_type: params.dressType,
-      }, selectedModel, conversationId, inputImageData);
-
-      if (response.image) {
-        if (response.conversation_id && !conversationId) {
-          setConversationId(response.conversation_id);
+      if (genMode === "text") {
+        const response = await aiAPI.generateText(text, selectedModel, conversationId, inputImageData);
+        if (response.text) {
+          if (response.conversation_id && !conversationId) setConversationId(response.conversation_id);
+          const aiMsg = {
+            id: "msg-" + Date.now(), sender_role: "assistant",
+            content: response.text,
+            created_at: new Date().toISOString(),
+          };
+          setMessages((prev) => [...prev, aiMsg]);
+        } else {
+          toast.error(response.error || "Generation failed");
+          setMessages((prev) => prev.filter((m) => m.id !== userMsg.id));
         }
-        setLastImageUrl(response.image);
-        clearInputImage();
-        const aiMsg = {
-          id: "msg-" + Date.now(), sender_role: "assistant",
-          content: prompt || "Here's your design",
-          image_url: response.image,
-          created_at: new Date().toISOString(),
-        };
-        setMessages((prev) => [...prev, aiMsg]);
-        toast.success("Design generated!");
       } else {
-        toast.error(response.error || "Generation failed");
-        setMessages((prev) => prev.filter((m) => m.id !== userMsg.id));
+        const response = await aiAPI.generateImage(text, {
+          color: params.color, pattern: params.pattern, neckline: params.neckline,
+          sleeve_length: params.sleeveLength, train_length: params.trainLength,
+          texture: params.texture, texture_intensity: params.textureIntensity,
+          skirt_volume: params.skirtVolume, dress_type: params.dressType,
+        }, selectedModel, conversationId, inputImageData);
+
+        if (response.image) {
+          if (response.conversation_id && !conversationId) setConversationId(response.conversation_id);
+          setLastImageUrl(response.image);
+          clearInputImage();
+          const aiMsg = {
+            id: "msg-" + Date.now(), sender_role: "assistant",
+            content: prompt || "Here's your design",
+            image_url: response.image,
+            created_at: new Date().toISOString(),
+          };
+          setMessages((prev) => [...prev, aiMsg]);
+          toast.success("Design generated!");
+        } else {
+          toast.error(response.error || "Generation failed");
+          setMessages((prev) => prev.filter((m) => m.id !== userMsg.id));
+        }
       }
     } catch (error) {
       toast.error("Generation failed: " + (error.message || "Unknown error"));
       setMessages((prev) => prev.filter((m) => m.id !== userMsg.id));
     }
+    setIsTyping(false);
     setIsGenerating(false);
   };
 
@@ -359,9 +387,12 @@ export default function Studio() {
   };
 
   const supportsImageInput = useMemo(() => {
+    if (genMode === "text") return false;
     const m = models.find((m) => m.id === selectedModel);
     return m?.supports_image_input ?? false;
-  }, [models, selectedModel]);
+  }, [models, selectedModel, genMode]);
+
+  const activeModels = genMode === "text" ? textModels : models;
 
   return (
     <div
@@ -386,13 +417,36 @@ export default function Studio() {
               + New Chat
             </button>
           )}
+          {/* Mode toggle */}
+          <div className="flex rounded-full p-0.5" style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.06)" }}>
+            <button
+              onClick={() => { setGenMode("image"); setSelectedModel(models[0]?.id || "pollinations"); }}
+              className="text-[11px] px-2.5 py-1 rounded-full font-medium transition-all"
+              style={{
+                background: genMode === "image" ? "#0066cc" : "transparent",
+                color: genMode === "image" ? "#fff" : "#94a3b8",
+              }}
+            >
+              Image
+            </button>
+            <button
+              onClick={() => { setGenMode("text"); setSelectedModel(textModels[0]?.id || ""); }}
+              className="text-[11px] px-2.5 py-1 rounded-full font-medium transition-all"
+              style={{
+                background: genMode === "text" ? "#0066cc" : "transparent",
+                color: genMode === "text" ? "#fff" : "#94a3b8",
+              }}
+            >
+              Text
+            </button>
+          </div>
           <select
             value={selectedModel}
             onChange={(e) => setSelectedModel(e.target.value)}
-            className="text-[11px] rounded-full border px-2.5 py-1 focus:outline-none focus:ring-2 focus:ring-[#0099ff]/30 cursor-pointer transition-all"
+            className="text-[11px] rounded-full border px-2.5 py-1 focus:outline-none cursor-pointer transition-all"
             style={{ border: "1px solid rgba(0,0,0,0.08)", background: "#ffffff", color: "#001a33" }}
           >
-            {models.map((m) => (
+            {activeModels.map((m) => (
               <option key={m.id} value={m.id} disabled={m.requires_key && !m.key_configured}>
                 {m.name}{m.requires_key && !m.key_configured ? " (no key)" : ""}
               </option>
@@ -461,7 +515,7 @@ export default function Studio() {
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1.5 min-h-0">
+      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-10">
             <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-3" style={{ background: "linear-gradient(135deg, rgba(0,102,204,0.1), rgba(0,153,255,0.05))", border: "1px solid rgba(0,102,204,0.1)" }}>
@@ -469,7 +523,7 @@ export default function Studio() {
             </div>
             <p className="text-base font-bold" style={{ color: "#001a33" }}>Design Your Dream Dress</p>
             <p className="text-xs mt-1.5 max-w-xs" style={{ color: "#004999" }}>
-              Describe a dress, upload a photo, or both — and let AI bring your vision to life.
+              Describe a dress, upload a photo, or both — and let MenteE AI bring your vision to life.
             </p>
             <div className="flex flex-wrap gap-1.5 mt-4 justify-center">
               {["A red velvet evening gown", "Upload my photo & pick a dress", "Elegant outfit for a wedding"].map((s) => (
@@ -480,55 +534,87 @@ export default function Studio() {
             </div>
           </div>
         ) : (
-          messages.map((msg) => (
-            <div key={msg.id} className={`flex ${msg.sender_role === "user" ? "justify-end" : "justify-start"}`}>
-              <div
-                className={`max-w-[75%] rounded-xl px-3 py-2 ${
-                  msg.sender_role === "user" ? "rounded-br-sm" : "rounded-bl-sm"
-                }`}
-                style={{
-                  background: msg.sender_role === "user"
-                    ? "linear-gradient(135deg, #0066cc, #0099ff)"
-                    : "#ffffff",
-                  color: msg.sender_role === "user" ? "#fff" : "#001a33",
-                  border: msg.sender_role === "user" ? "none" : "1px solid rgba(0,0,0,0.06)",
-                  boxShadow: msg.sender_role === "user"
-                    ? "0 1px 4px rgba(0,102,204,0.15)"
-                    : "0 1px 4px rgba(0,0,0,0.04)",
-                }}
-              >
-                {msg.sender_role === "user" ? (
-                  <div>
-                    {msg.image_url && (
-                      <img src={msg.image_url} alt="Your upload" className="w-14 h-14 rounded-md object-cover mb-1 border border-white/30" />
-                    )}
-                    <p className="text-xs whitespace-pre-wrap leading-snug">{msg.content}</p>
+          <>
+            {messages.map((msg) => (
+              <div key={msg.id} className={`flex gap-2.5 ${msg.sender_role === "user" ? "justify-end" : "justify-start"}`}>
+                {msg.sender_role !== "user" && (
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5" style={{ background: "linear-gradient(135deg, #0066cc, #0099ff)", color: "#fff" }}>
+                    M
                   </div>
-                ) : (
-                  <div>
-                    {msg.image_url ? (
-                      <div className="relative group cursor-pointer" onClick={() => downloadImage(msg.image_url)}>
-                        <img
-                          src={msg.image_url}
-                          alt="Generated design"
-                          className="w-full rounded-lg object-cover"
-                          style={{ maxHeight: "220px", boxShadow: "0 2px 12px rgba(0,0,0,0.08)" }}
-                        />
-                        <div className="absolute inset-0 rounded-lg bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                          <button className="text-[10px] px-2 py-1 rounded-md font-medium bg-black/40 backdrop-blur-sm text-white hover:bg-black/60 transition-colors">
-                            Download
-                          </button>
-                        </div>
+                )}
+                <div className={`flex flex-col ${msg.sender_role === "user" ? "items-end" : "items-start"} max-w-[70%]`}>
+                  <div
+                    className={`rounded-2xl px-3.5 py-2 ${
+                      msg.sender_role === "user" ? "rounded-br-md" : "rounded-bl-md"
+                    }`}
+                    style={{
+                      background: msg.sender_role === "user"
+                        ? "linear-gradient(135deg, #0066cc, #0099ff)"
+                        : "#ffffff",
+                      color: msg.sender_role === "user" ? "#fff" : "#001a33",
+                      border: msg.sender_role === "user" ? "none" : "1px solid rgba(0,0,0,0.06)",
+                      boxShadow: msg.sender_role === "user"
+                        ? "0 1px 6px rgba(0,102,204,0.2)"
+                        : "0 1px 4px rgba(0,0,0,0.04)",
+                    }}
+                  >
+                    {msg.sender_role === "user" ? (
+                      <div>
+                        {msg.image_url && (
+                          <img src={msg.image_url} alt="Your upload" className="w-16 h-16 rounded-lg object-cover mb-1.5" />
+                        )}
+                        <p className="text-xs whitespace-pre-wrap leading-relaxed">{msg.content}</p>
                       </div>
                     ) : (
-                      <p className="text-xs whitespace-pre-wrap leading-snug">{msg.content}</p>
+                      <div>
+                        {msg.image_url ? (
+                          <div className="relative group cursor-pointer" onClick={() => downloadImage(msg.image_url)}>
+                            <img
+                              src={msg.image_url}
+                              alt="Generated design"
+                              className="w-full rounded-xl object-cover"
+                              style={{ maxHeight: "240px", boxShadow: "0 2px 12px rgba(0,0,0,0.08)" }}
+                            />
+                            <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                            <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                              <button className="text-[10px] px-2 py-1 rounded-md font-medium bg-black/40 backdrop-blur-sm text-white hover:bg-black/60 transition-colors">
+                                Download
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-xs whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                        )}
+                      </div>
                     )}
+                  </div>
+                  <span className="text-[9px] mt-1 px-1" style={{ color: "#cbd5e1" }}>
+                    {formatMsgTime(msg.created_at)}
+                  </span>
+                </div>
+                {msg.sender_role === "user" && (
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5" style={{ background: "#f0f4f8", color: "#0066cc", border: "1px solid rgba(0,0,0,0.06)" }}>
+                    {userInitials}
                   </div>
                 )}
               </div>
-            </div>
-          ))
+            ))}
+            {/* Typing indicator */}
+            {isTyping && (
+              <div className="flex gap-2.5 justify-start">
+                <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5" style={{ background: "linear-gradient(135deg, #0066cc, #0099ff)", color: "#fff" }}>
+                  M
+                </div>
+                <div className="rounded-2xl rounded-bl-md px-4 py-3" style={{ background: "#ffffff", border: "1px solid rgba(0,0,0,0.06)", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+                  <div className="flex gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: "#94a3b8", animationDelay: "0ms" }} />
+                    <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: "#94a3b8", animationDelay: "150ms" }} />
+                    <span className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: "#94a3b8", animationDelay: "300ms" }} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
         <div ref={chatEndRef} />
       </div>

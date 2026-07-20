@@ -39,6 +39,7 @@ def create_app(config_name='development'):
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
     app.config['GOOGLE_API_KEY'] = os.getenv('GOOGLE_API_KEY', '')
     app.config['GEMINI_MODEL'] = os.getenv('GEMINI_MODEL', 'gemini-1.5-flash')
+    app.config['GROQ_API_KEY'] = os.getenv('GROQ_API_KEY', '')
     app.config['HF_TOKEN'] = os.getenv('HF_TOKEN', '')
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     

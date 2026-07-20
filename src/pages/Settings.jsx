@@ -14,7 +14,7 @@ export default function Settings() {
       if (typeof s.notifications === "boolean") setNotifications(s.notifications);
       if (s.defaultModel) setDefaultModel(s.defaultModel);
     } catch {}
-    aiAPI.listModels().then((r) => setModels(r.models || [])).catch(() => {});
+    aiAPI.listModels().then((r) => setModels(r.image_models || [])).catch(() => {});
   }, []);
 
   useEffect(() => {

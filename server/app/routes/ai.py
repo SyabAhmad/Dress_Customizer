@@ -113,33 +113,43 @@ Keep it concise (under 200 characters). Output ONLY the prompt text, no explanat
 @ai_bp.route('/models', methods=['GET'])
 @jwt_required()
 def list_models():
-    models = [
-        {'id': 'pollinations', 'name': 'Pollinations.ai', 'provider': 'Pollinations.ai',
-         'requires_key': False, 'key_configured': True, 'supports_image_input': True},
+    # Text generation models (Groq - free)
+    groq_key = current_app.config.get('GROQ_API_KEY')
+    text_models = [
+        {'id': 'groq-llama', 'name': 'Llama 3.3 70B', 'provider': 'Groq',
+         'type': 'text', 'requires_key': True, 'key_configured': bool(groq_key)},
+        {'id': 'groq-gemma', 'name': 'Gemma 2 9B', 'provider': 'Groq',
+         'type': 'text', 'requires_key': True, 'key_configured': bool(groq_key)},
+    ]
+
+    # Image generation models
+    image_models = [
+        {'id': 'pollinations', 'name': 'Pollinations.ai', 'provider': 'Pollinations',
+         'type': 'image', 'requires_key': False, 'key_configured': True, 'supports_image_input': True},
     ]
     api_key = current_app.config.get('GOOGLE_API_KEY')
-    models.append({'id': 'gemini-enhanced', 'name': 'Gemini-Enhanced', 'provider': 'Gemini Image',
-                   'requires_key': True, 'key_configured': bool(api_key), 'supports_image_input': True})
+    image_models.append({'id': 'gemini-enhanced', 'name': 'Gemini Image', 'provider': 'Google',
+                         'type': 'image', 'requires_key': True, 'key_configured': bool(api_key), 'supports_image_input': True})
 
     try:
         resp = requests.get(f"{SUBNP_BASE_URL}/api/free/models", timeout=10)
         if resp.ok:
             for m in resp.json().get('models', []):
-                models.append({'id': f"subnp-{m['model']}", 'name': f"SubNP ({m['model']})",
-                               'provider': m.get('provider', 'SubNP'), 'requires_key': False, 'key_configured': True,
-                               'supports_image_input': False})
+                image_models.append({'id': f"subnp-{m['model']}", 'name': f"SubNP ({m['model']})",
+                               'provider': m.get('provider', 'SubNP'), 'type': 'image',
+                               'requires_key': False, 'key_configured': True, 'supports_image_input': False})
         else:
             for m in ['turbo', 'flux', 'magic']:
-                models.append({'id': f"subnp-{m}", 'name': f"SubNP ({m})",
-                               'provider': 'SubNP', 'requires_key': False, 'key_configured': True,
-                               'supports_image_input': False})
+                image_models.append({'id': f"subnp-{m}", 'name': f"SubNP ({m})",
+                               'provider': 'SubNP', 'type': 'image',
+                               'requires_key': False, 'key_configured': True, 'supports_image_input': False})
     except Exception:
         for m in ['turbo', 'flux', 'magic']:
-            models.append({'id': f"subnp-{m}", 'name': f"SubNP ({m})",
-                           'provider': 'SubNP', 'requires_key': False, 'key_configured': True,
-                           'supports_image_input': False})
+            image_models.append({'id': f"subnp-{m}", 'name': f"SubNP ({m})",
+                           'provider': 'SubNP', 'type': 'image',
+                           'requires_key': False, 'key_configured': True, 'supports_image_input': False})
 
-    return jsonify({'models': models}), 200
+    return jsonify({'text_models': text_models, 'image_models': image_models}), 200
 
 
 @ai_bp.route('/generate-image', methods=['POST'])
@@ -323,3 +333,65 @@ def fetch_subnp_image(prompt, subnp_model='turbo'):
         return None, 'Could not reach SubNP API.'
     except Exception as e:
         return None, f'SubNP generation failed: {str(e)}'
+
+
+@ai_bp.route('/generate-text', methods=['POST'])
+@jwt_required()
+def generate_text():
+    try:
+        account_id = get_jwt_identity()
+        data = request.get_json()
+        if not data or not data.get('prompt'):
+            return jsonify({'error': 'Missing prompt'}), 400
+
+        prompt = data.get('prompt', '')
+        model = data.get('model', 'groq-llama')
+        conv_id = data.get('conversation_id')
+
+        groq_key = current_app.config.get('GROQ_API_KEY')
+        if not groq_key:
+            return jsonify({'error': 'Groq API key not configured.'}), 503
+
+        import groq
+        client = groq.Groq(api_key=groq_key)
+
+        groq_model = 'llama-3.3-70b-versatile' if model == 'groq-llama' else 'gemma2-9b-it'
+
+        system_msg = (
+            "Your name is MenteE AI. You are a fashion design assistant created by MenteE. "
+            "Help users with dress designs, outfit suggestions, fabric choices, color combinations, "
+            "and style advice. Be concise and helpful. "
+            "Always identify yourself as MenteE AI when asked your name. "
+            "Never invent a different name or persona."
+        )
+
+        response = client.chat.completions.create(
+            model=groq_model,
+            messages=[
+                {"role": "system", "content": system_msg},
+                {"role": "user", "content": prompt},
+            ],
+            max_tokens=1024,
+            temperature=0.7,
+        )
+
+        reply = response.choices[0].message.content.strip()
+
+        conv = ensure_conversation(account_id, conv_id, prompt)
+        add_chat_message(conv.id, 'user', prompt)
+        add_chat_message(conv.id, 'assistant', reply)
+        conv.updated_at = datetime.utcnow()
+        db.session.commit()
+
+        return jsonify({
+            'success': True,
+            'text': reply,
+            'model': model,
+            'conversation_id': conv.id,
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        import traceback
+        print(f"Text generation error: {traceback.format_exc()}")
+        return jsonify({'error': f'Text generation failed: {str(e)}'}), 500
