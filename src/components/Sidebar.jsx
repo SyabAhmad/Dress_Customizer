@@ -56,51 +56,28 @@ export default function Sidebar() {
         borderRight: "1px solid rgba(0,0,0,0.06)",
       }}
     >
-      {/* Header */}
-      <div className={`flex items-center shrink-0 ${collapsed ? "flex-col gap-2 py-3" : "justify-between px-3 py-3"}`}>
+      {/* Top: Logo + Profile + Toggle */}
+      <div className={`flex items-center shrink-0 gap-2 ${collapsed ? "flex-col py-3" : "px-3 py-3"}`}>
+        <Link to="/profile" title="Profile" className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 transition-all hover:ring-2 hover:ring-[#0066cc]/20" style={{ background: "linear-gradient(135deg, #0066cc, #0099ff)", color: "#fff" }}>
+          {initials}
+        </Link>
         {!collapsed && (
-          <span className="text-xs font-bold tracking-wide" style={{ color: "#001a33" }}>Dress</span>
+          <span className="text-[11px] font-semibold truncate flex-1" style={{ color: "#001a33" }}>
+            {user?.first_name || user?.email?.split("@")[0] || "User"}
+          </span>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
           title={collapsed ? "Expand" : "Collapse"}
-          className="w-7 h-7 rounded-lg flex items-center justify-center transition-all shrink-0 hover:bg-gray-100"
-          style={{ color: "#94a3b8" }}
+          className="w-6 h-6 rounded flex items-center justify-center transition-all shrink-0 hover:bg-gray-100"
+          style={{ color: "#cbd5e1" }}
         >
-          {collapsed ? <ChevronRightIcon className="w-4 h-4" /> : <ChevronLeftIcon className="w-4 h-4" />}
+          {collapsed ? <ChevronRightIcon className="w-3.5 h-3.5" /> : <ChevronLeftIcon className="w-3.5 h-3.5" />}
         </button>
       </div>
 
-      <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }} />
-
-      {/* Profile */}
-      <div className={`shrink-0 py-3 ${collapsed ? "flex justify-center" : "px-3"}`}>
-        <Link
-          to="/profile"
-          title="Profile"
-          className={
-            "flex items-center rounded-xl transition-all hover:bg-gray-50 " +
-            (collapsed ? "w-8 h-8 justify-center" : "gap-2.5 px-2 py-1.5")
-          }
-        >
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0"
-            style={{ background: "linear-gradient(135deg, #0066cc, #0099ff)", color: "#fff" }}
-          >
-            {initials}
-          </div>
-          {!collapsed && (
-            <span className="text-[11px] font-semibold truncate" style={{ color: "#001a33" }}>
-              {user?.first_name || user?.email?.split("@")[0] || "User"}
-            </span>
-          )}
-        </Link>
-      </div>
-
-      <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }} />
-
       {/* Nav */}
-      <div className={`flex flex-col gap-0.5 flex-1 py-2 ${collapsed ? "items-center px-0" : "px-2"}`}>
+      <div className={`flex flex-col gap-0.5 flex-1 py-1 ${collapsed ? "items-center px-0" : "px-2"}`}>
         {items.map((item) => (
           <SidebarItem key={item.to} {...item} active={base === item.to} collapsed={collapsed} />
         ))}
